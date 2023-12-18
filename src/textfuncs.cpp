@@ -113,11 +113,11 @@ char* getToken(Text* text, size_t numToken)
     return text->tokens[numToken].string;
 }
 
-struct Token* getTokens(Text* text)
+struct Line* getTokens(Text* text)
 {
     myAssert(text, NULL_PTR);
 
-    Token* tokens = (struct Token*)calloc(text->numTokens, sizeof(Token));
+    Line* tokens = (struct Line*)calloc(text->numTokens, sizeof(Line));
 
     for (size_t i = 0; i < text->numTokens; i++)
       {
@@ -135,11 +135,11 @@ void generalSort(Text* text, size_t sortmode)
     switch (sortmode)
     {
     case FORWARDS:
-        quickSort((void*)text->tokens, 0, text->numTokens - 1, sizeof(struct Token), compareStringForw);
+        quickSort((void*)text->tokens, 0, text->numTokens - 1, sizeof(struct Line), compareStringForw);
         break;
     
     case BACKWARDS:
-        quickSort((void*)text->tokens, 0, text->numTokens - 1, sizeof(struct Token), compareStringBack);
+        quickSort((void*)text->tokens, 0, text->numTokens - 1, sizeof(struct Line), compareStringBack);
         break;
 
     case NONE:
@@ -210,8 +210,8 @@ int compareStringForw(const void* a, const void* b)
     myAssert(a, NULL_PTR);
     myAssert(b, NULL_PTR);
     
-    struct Token* str1 = (Token*)a;
-    struct Token* str2 = (Token*)b;
+    struct Line* str1 = (Line*)a;
+    struct Line* str2 = (Line*)b;
 
     char* strptr1 = str1->string;
     char* strptr2 = str2->string;
@@ -242,8 +242,8 @@ int compareStringBack(const void* a, const void* b)
     myAssert(a, NULL_PTR);
     myAssert(b, NULL_PTR);
 
-    struct Token* str1 = (Token*)a;
-    struct Token* str2 = (Token*)b;
+    struct Line* str1 = (Line*)a;
+    struct Line* str2 = (Line*)b;
 
     char* strptr1 = str1->string + str1->length - 1;
     char* strptr2 = str2->string + str2->length - 1; 
@@ -290,7 +290,7 @@ size_t CheckFile(const char* filename)
     return INCORRECT;
 }
 
-int StringIsEmpty(const Token* line)
+int StringIsEmpty(const Line* line)
 {
     for (size_t i = 0; i < line->length; i++)
         if (!isspace(line->string[i]))

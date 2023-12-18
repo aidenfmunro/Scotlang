@@ -79,16 +79,16 @@ struct Text
     char* const* lineptrs;
     size_t size,
            numTokens;
-    struct Token* tokens;
+    struct Line* tokens;
 };
 
 /**
  * 
- * Token structure that contains a string and the length of the string.
+ * Line structure that contains a string and the length of the string.
  * 
  */
 
-struct Token
+struct Line
 {
     char* string;
     size_t length;
@@ -214,13 +214,13 @@ char* getToken(Text* text, size_t numToken);
  * \brief Gets lots of line structures.
  * 
  * @param[in] text - text structure.
- * @param[out] struct Token.   
+ * @param[out] struct Line.   
  * 
  * \return string.
  * 
  */
 
-struct Token* getTokens(Text* text);
+struct Line* getTokens(Text* text);
 
 /**
  * 
@@ -312,6 +312,6 @@ int compareStringForw(const void* a, const void* b);
 
 int compareStringBack(const void* a, const void* b);
 
-int StringIsEmpty(const Token* line);
+int StringIsEmpty(const Line* line);
 
 #endif

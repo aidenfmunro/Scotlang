@@ -20,10 +20,10 @@ enum Operator
     LN,
     POW,
 
+    FUNCTION,
     IF,
     WHILE,
     RETURN,
-    FUNC,
     PRINT,
     INPUT,
     VARDEC,
