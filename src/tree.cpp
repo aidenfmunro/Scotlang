@@ -211,9 +211,9 @@ Node* copyNode(Node* originalNode)
     return newNode;
 }
 
-ErrorCode connectNode(Node* node, Node* leftChild, Node* rightChild)
+Node* connectNode(Node* node, Node* leftChild, Node* rightChild)
 {
-    AssertSoft(node, NULL_PTR);
+    AssertSoft(node, NULL);
 
     node->left = leftChild;
 
@@ -225,7 +225,7 @@ ErrorCode connectNode(Node* node, Node* leftChild, Node* rightChild)
     if (rightChild)
         rightChild->parent = node;
 
-    return OK;
+    return node;
 }
 
 Node* createConstNode(double value)
@@ -442,7 +442,7 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
 
 char* getOpName(Operator op)
 {
-    #define DEF_OP(keyword, name) case name: return #keyword;
+    #define DEF_OP(keyword, name) case name: return #name;
 
     switch (op)
     {

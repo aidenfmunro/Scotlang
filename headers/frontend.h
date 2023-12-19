@@ -55,5 +55,23 @@ Node* createVarToken(char* varName);
 
 void PrintTokens ();
 
+Node* GetG();
+
+Node* GetE();
+
+Node* GetIfWhile();
+
+Node* GetT();
+
+Node* GetOp();
+
+Node* GetA();
+
+Node* GetName();
+
+Node* GetP();
+
+
+
 
 #endif

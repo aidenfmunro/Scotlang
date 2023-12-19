@@ -66,7 +66,7 @@ ErrorCode VerifyTree        (Tree* tree);
 
 ErrorCode deleteNode        (Node* node);
 
-ErrorCode connectNode       (Node* node, Node* leftChild, Node* rightChild);
+Node*     connectNode       (Node* node, Node* leftChild, Node* rightChild);
 
 Node*     copyNode          (Node* originalNode);
 

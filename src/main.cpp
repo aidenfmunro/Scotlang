@@ -7,4 +7,8 @@ int main(void)
     getTokens("ex.sc");
 
     PrintTokens();
+
+    Node* root = GetG();
+
+    DumpTreeGraph(root);
 }
