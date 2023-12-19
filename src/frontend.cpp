@@ -1,6 +1,6 @@
 #include "frontend.h"
 
-const char* expression = "ya div 1 3 4 dumb";
+const char* expression = "dae name fit a , b like? ya wheesht a + b ! gan?";
 
 Type curTokenStatus = NO_TYPE;
 
@@ -18,11 +18,11 @@ ErrorCode getTokens(const char* fileIn)
     {
         skipSymbols();
 
-        printf("cur symb: %c\n", *expression);
-
         if (*expression == '\0')
             break;
-        
+
+        printf("cur symb: %c\n", *expression);
+
         if (! getToken())
             break;
     }
@@ -61,14 +61,14 @@ bool getToken()
     if ( getConstToken() )
         return true;
     
-    if ( getNameToken() )
-        return true; 
-
-    return false;
+    return getNameToken();
 }
 
 bool getOpToken()
 {
+    if (*expression == '\0')
+        return false;
+
     #define DEF_OP(keyword, name)                                   \
                                                                     \
     if (strncmp(keyword, expression, sizeof(keyword) - 1) == 0)     \
@@ -109,24 +109,32 @@ const int MAX_IDENTIFIER_NAME = 32;
 
 bool getNameToken()
 {
+    if (*expression == '\0')
+        return false;
+
     SafeCalloc(name, MAX_IDENTIFIER_NAME, char, false);
 
-    size_t charsRead = 0;
+    sscanf(expression, "%[a-zA-Z_0-9]*", name);
 
-    sscanf(expression, "%[a-zA-Z_0-9]*%n", name, &charsRead);
+    const char* endPtr = strchr(expression, ' ');
+
+    int charsRead = endPtr - expression + 1; // func fit ... like?
+
+    if (charsRead < 0 || charsRead > MAX_IDENTIFIER_NAME)
+        return false;
 
     printf("-> %d\n", charsRead);
 
     expression += charsRead;
 
-    if (tokens[curTokenNum - 1]->type == OP && tokens[curTokenNum - 1]->data.op == FUNCDEC)
+    if (tokens[curTokenNum - 1]->type == FUNC && tokens[curTokenNum - 1]->data.op == FUNCDEC)
     {
         createFuncNode(name);
 
         return true;
     }
 
-    if (*expression == '(')
+    if (strncmp(expression, "fit", 3) == 0)
     {
         createFuncToken(name);
 
@@ -190,7 +198,7 @@ void PrintTokens ()
             printf ("Sys oper = %d\n", tokens[i]->data.op);
 
         if (tokens[i]->type == FUNC)
-            printf ("Func = %d\n", tokens[i]->data.op);
+            printf ("Func = %s\n", tokens[i]->data.name);
 
         if (tokens[i]->type == VAR)
             printf ("Var = %s\n", tokens[i]->data.name);

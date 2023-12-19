@@ -29,7 +29,7 @@ char* parseBuf(Text* text, const char* filename)
 
     FILE* fp = fopen(filename, "rb");
 
-    char* buffer = (char*)calloc(text->size + 1, sizeof(char));
+    char* buffer = (char*)calloc(text->size + 2, sizeof(char));
 
     fread(buffer, sizeof(char), text->size, fp);
 

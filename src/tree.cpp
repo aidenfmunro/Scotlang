@@ -310,7 +310,7 @@ static ErrorCode _dumpTreeTxt(Node* node, FILE* outFile) // TODO: create tree wi
 
         case FUNC:
         {
-            dumpText("%s", getOpName(node->data.op)); 
+            dumpText("%s", node->data.name); 
             break;
         }
 
@@ -405,6 +405,12 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
     if (node->type == VAR)
     {
         dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"aquamarine\"]\n",
+                                                                             nodeNum, node->data.name);
+    }
+
+    if (node->type == FUNC)
+    {
+        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"azure\"]\n",
                                                                              nodeNum, node->data.name);
     }
 

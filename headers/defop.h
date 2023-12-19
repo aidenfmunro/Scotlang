@@ -2,7 +2,7 @@ DEF_OP( "dae",               FUNCDEC) // function declaration
 DEF_OP( "spikin",              PRINT)  
 DEF_OP( "speir",               INPUT)   
 DEF_OP( "fa",                     IF)
-DEF_OP( "gan",                 WHILE)
+DEF_OP( "ran",                 WHILE)
 DEF_OP( "wheesht",            RETURN)
 DEF_OP( "aye-aye",            VARDEC) // variable declaration
 DEF_OP( "mair",                 MORE) // '>'
