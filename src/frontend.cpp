@@ -1,6 +1,6 @@
 #include "frontend.h"
 
-const char* expression = "ya div 1 3 4";
+const char* expression = "ya div 1 3 4 dumb";
 
 Type curTokenStatus = NO_TYPE;
 
@@ -55,52 +55,34 @@ bool getToken()
 {
     skipSymbols();
 
-    if (getOpToken() )
+    if ( getOpToken() )
         return true;
     
-    if (getConstToken() )
+    if ( getConstToken() )
         return true;
     
-    /* if (getNametToken() )
-        return true; */
+    if ( getNameToken() )
+        return true; 
 
     return false;
 }
 
 bool getOpToken()
 {
-    /*
     #define DEF_OP(keyword, name)                                   \
+                                                                    \
     if (strncmp(keyword, expression, sizeof(keyword) - 1) == 0)     \
     {                                                               \
         expression += sizeof(keyword) - 1;                          \
+                                                                    \
         createOpToken(name);                                        \
+                                                                    \
         return true;                                                \
     }
 
     #include "defop.h"
 
     #undef DEF_OP
-    */
-
-    Node* node = NULL;
-
-    if (strncmp("ya", expression, sizeof("ya") - 1) == 0)     
-    {                                                               
-        expression += sizeof("ya") - 1;                          
-        node = createOpToken(OPENSB);   
-        printf("node: %p\n", node);                                     
-        return true;                                                
-    }
-
-    if (strncmp("div", expression, sizeof("div") - 1) == 0)     
-    {                                                               
-        expression += sizeof("div") - 1;                          
-        createOpToken(EQ);                                        
-        return true;                                               
-    }
-
-
 
     return false;
 }
@@ -125,11 +107,17 @@ bool getConstToken()
 
 const int MAX_IDENTIFIER_NAME = 32;
 
-bool getNametToken()
+bool getNameToken()
 {
     SafeCalloc(name, MAX_IDENTIFIER_NAME, char, false);
 
-    sscanf(expression, "%[a-zA-Z]", name);
+    size_t charsRead = 0;
+
+    sscanf(expression, "%[a-zA-Z_0-9]*%n", name, &charsRead);
+
+    printf("-> %d\n", charsRead);
+
+    expression += charsRead;
 
     if (tokens[curTokenNum - 1]->type == OP && tokens[curTokenNum - 1]->data.op == FUNCDEC)
     {
@@ -205,7 +193,7 @@ void PrintTokens ()
             printf ("Func = %d\n", tokens[i]->data.op);
 
         if (tokens[i]->type == VAR)
-            printf ("Var = %d\n", tokens[i]->data.op);
+            printf ("Var = %s\n", tokens[i]->data.name);
 
         if (tokens[i]->type == CONST)
             printf ("Const = %lg\n", tokens[i]->data.constVal);

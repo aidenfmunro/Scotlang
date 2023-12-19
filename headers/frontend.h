@@ -43,7 +43,7 @@ bool getOpToken();
 
 bool getConstToken();
 
-bool getNametToken();
+bool getNameToken();
 
 Node* createOpToken(Operator op);
 
