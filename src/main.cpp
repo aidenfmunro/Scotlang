@@ -4,5 +4,7 @@
 
 int main(void)
 {
-    readTokens("ex.sc");
+    getTokens("ex.sc");
+
+    PrintTokens();
 }

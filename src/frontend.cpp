@@ -1,140 +1,254 @@
 #include "frontend.h"
 
-Tokens readTokens (const char* filename)
+const char* expression = "ya div 1 3 4";
+
+Type curTokenStatus = NO_TYPE;
+
+Node* tokens[100] = {};
+
+size_t curTokenNum = 0;
+
+ErrorCode getTokens(const char* fileIn)
 {
-    AssertSoft(filename, {});
+    Text source = {};
 
-    Text text = {};
+    CreateText(&source, fileIn, NONE);
 
-    CreateText(&text, filename, NONE);
-    printf("%d", text.size);
-
-    size_t curLineNum = 0;
-
-    size_t curLinePos = 1;
-
-    size_t curPos = 0;
-
-    Tokens tokens = {};
-
-    SafeCalloc(temptokens, text.size, Token, {});
-
-    tokens.tokens = temptokens;
-
-    skipSpaces(text.buffer, &curPos, &curLinePos, &curLineNum);
-
-    while (text.buffer[curPos] != '\0') // TOKENTYPE
+    while (*expression)
     {
-        printf("%d\n", curPos);
+        skipSymbols();
 
-        tokens.tokens[tokens.curTokenNum] = readToken(text.buffer, &curPos, &curLinePos, &curLineNum);
+        printf("cur symb: %c\n", *expression);
 
-        printf("token [%d](%d): %s in line: %zu, pos: %zu\n", tokens.curTokenNum, tokens.tokens[tokens.curTokenNum].data.op,
-                                    tokens.tokens[tokens.curTokenNum].lineNum,
-                                    tokens.tokens[tokens.curTokenNum].linePos);
-
-        printf("%d\n", curPos);
-
-        tokens.size        += 1;
-
-        tokens.curTokenNum += 1;
-
-        skipSpaces(text.buffer, &curPos, &curLinePos, &curLineNum);
+        if (*expression == '\0')
+            break;
+        
+        if (! getToken())
+            break;
     }
 
-    tokens.curTokenNum = 0;
+    for (size_t i = 0; i < 4; i++)
+    {
+        printf("%p\n", tokens[i]);
+    }
 
-    return tokens;
+    return OK; 
 }
 
-static const int MAX_STR_SIZE = 64;
-
-Token readToken (char* buffer, size_t* curPos, size_t* curLinePos, size_t* curLineNum)
+size_t skipSymbols()
 {
-    AssertSoft(buffer, {});
+    size_t charsSkipped = 0;
 
-    Token token = {};
+    if (*expression == '\0')
+        return 0;
 
-    #define DEF_OP(keyword, name)                             \
-                                                              \
-    if (strncasecmp(keyword, buffer, sizeof(keyword) - 1))    \
-    {                                                         \
-        token.data.op = name;                                 \
-                                                              \
-        token.lineNum = *curLineNum;                          \
-                                                              \
-        token.linePos = *curLinePos;                          \
-                                                              \
-        token.length = sizeof(keyword) - 1;                   \
-                                                              \
-        *curPos     += token.length;                          \
-                                                              \
-        *curLinePos += token.length;                          \
-                                                              \
-        return token;                                         \
+    while (isspace(*expression) || *expression == '\t' || *expression == '\n' || *expression == '\r')
+    {
+        expression++;
+        charsSkipped++;
+    }
+
+    return charsSkipped;
+}
+
+bool getToken()
+{
+    skipSymbols();
+
+    if (getOpToken() )
+        return true;
+    
+    if (getConstToken() )
+        return true;
+    
+    /* if (getNametToken() )
+        return true; */
+
+    return false;
+}
+
+bool getOpToken()
+{
+    /*
+    #define DEF_OP(keyword, name)                                   \
+    if (strncmp(keyword, expression, sizeof(keyword) - 1) == 0)     \
+    {                                                               \
+        expression += sizeof(keyword) - 1;                          \
+        createOpToken(name);                                        \
+        return true;                                                \
     }
 
     #include "defop.h"
 
     #undef DEF_OP
+    */
 
-    token.length = countChars(buffer, curPos);
+    Node* node = NULL;
 
-    printf("sdsd %zu", countChars(buffer, curPos));
-
-    token.data.name = buffer + *curPos;
-
-    *curPos     += token.length;
-
-    *curLinePos += token.length;
-
-    return token;
-}
-
-size_t countChars (char* buffer, size_t* curPos)
-{
-    size_t charsRead = 0;
-
-    while (isalpha(*(buffer + charsRead + *curPos)) || *(buffer + charsRead + *curPos) == '?')
-    {
-        charsRead += 1;
-        printf("%d\n", charsRead);
+    if (strncmp("ya", expression, sizeof("ya") - 1) == 0)     
+    {                                                               
+        expression += sizeof("ya") - 1;                          
+        node = createOpToken(OPENSB);   
+        printf("node: %p\n", node);                                     
+        return true;                                                
     }
 
-    printf("%d\n", charsRead);
-
-    return charsRead;
-}
-
-ErrorCode skipSpaces (char* buffer, size_t* curPos, size_t* curLinePos, size_t* curLineNum)
-{
-    AssertSoft(buffer, NULL_PTR);
-
-    while (*buffer == ' ' || *buffer == '\t' || *buffer == '\n' || *buffer == '\r') // TODO: isspace
-    {
-        if (*buffer == '\n')
-        {
-            *curLineNum += 1;
-            *curLinePos  = 0;
-        }
-
-        *curPos += 1;
+    if (strncmp("div", expression, sizeof("div") - 1) == 0)     
+    {                                                               
+        expression += sizeof("div") - 1;                          
+        createOpToken(EQ);                                        
+        return true;                                               
     }
 
-    return OK;
+
+
+    return false;
 }
 
-// ---------------------------------> #define curToken tokens->tokens[tokens->curTokenNum]
-
-bool requireOp (Tokens* tokens, Operator op)
+bool getConstToken()
 {
-    if (tokens->tokens[tokens->curTokenNum].data.op == op)
+    if (isdigit(*expression))
     {
+        char* endPtr = NULL;
+
+        double value = strtod(expression, &endPtr);
+
+        expression += endPtr - expression;
+
+        createConstToken(value);
+
         return true;
     }
 
-    return false;   
+    return false;
 }
+
+const int MAX_IDENTIFIER_NAME = 32;
+
+bool getNametToken()
+{
+    SafeCalloc(name, MAX_IDENTIFIER_NAME, char, false);
+
+    sscanf(expression, "%[a-zA-Z]", name);
+
+    if (tokens[curTokenNum - 1]->type == OP && tokens[curTokenNum - 1]->data.op == FUNCDEC)
+    {
+        createFuncNode(name);
+
+        return true;
+    }
+
+    if (*expression == '(')
+    {
+        createFuncToken(name);
+
+        return true;
+    }
+
+    createVarToken(name);
+
+    return true;
+}
+
+Node* createOpToken(Operator op)
+{
+    Node* node = createOpNode(op);
+
+    tokens[curTokenNum++] = node;
+
+    curTokenStatus = OP;
+
+    return node;
+}
+
+Node* createConstToken(double value)
+{
+    Node* node = createConstNode(value);
+
+    tokens[curTokenNum++] = node;
+
+    curTokenStatus = CONST;
+
+    return node; 
+}
+
+Node* createFuncToken(char* funcName)
+{
+    Node* node = createFuncNode(funcName);
+
+    tokens[curTokenNum++] = node;
+
+    curTokenStatus = FUNC;
+
+    return node;
+}
+
+Node* createVarToken(char* varName)
+{
+    Node* node = createVarNode(varName);
+
+    tokens[curTokenNum++] = node;
+
+    curTokenStatus = VAR;
+
+    return node;
+}
+
+void PrintTokens () 
+{
+    for (size_t i = 0; i < curTokenNum; i++) 
+    {
+        if (tokens[i]->type == OP)
+            printf ("Sys oper = %d\n", tokens[i]->data.op);
+
+        if (tokens[i]->type == FUNC)
+            printf ("Func = %d\n", tokens[i]->data.op);
+
+        if (tokens[i]->type == VAR)
+            printf ("Var = %d\n", tokens[i]->data.op);
+
+        if (tokens[i]->type == CONST)
+            printf ("Const = %lg\n", tokens[i]->data.constVal);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // "if"'('P')''{'E'}'
 

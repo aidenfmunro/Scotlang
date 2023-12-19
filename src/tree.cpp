@@ -145,13 +145,17 @@ Node* createNode(NodeElem_t data, Type type, Node* left, Node* right)
     {
         newNode->data.constVal = data.constVal;
     }
-    else if (type == FUNC)
+    else if (type == OP)
     {
         newNode->data.op  = data.op;
     }
     else if (type == VAR)
     {
-        // newNode->data.var   = data.var; 
+        newNode->data.name = data.name;
+    }
+    else if (type == FUNC)
+    {
+        newNode->data.name = data.name;
     }
     else
     {
@@ -222,6 +226,42 @@ ErrorCode connectNode(Node* node, Node* leftChild, Node* rightChild)
         rightChild->parent = node;
 
     return OK;
+}
+
+Node* createConstNode(double value)
+{
+    NodeElem_t data = {};
+
+    data.constVal = value;
+
+    return createNode(data, CONST, nullptr, nullptr);
+}
+
+Node* createVarNode(char* varName)
+{
+    NodeElem_t data = {};
+
+    data.name = varName;
+
+    return createNode(data, VAR, nullptr, nullptr);
+}
+
+Node* createFuncNode(char* funcName)
+{
+    NodeElem_t data = {};
+
+    data.name = funcName;
+
+    return createNode(data, FUNC, nullptr, nullptr);
+}
+
+Node* createOpNode(Operator op)
+{
+    NodeElem_t data = {};
+    
+    data.op = op;
+
+    return createNode(data, OP, nullptr, nullptr);
 }
 
 ErrorCode VerifyTree(Tree* tree) // TODO: make proper verify 

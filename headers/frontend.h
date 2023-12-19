@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <ctype.h>
 #include "tree.h"
 #include "textfuncs.h"
@@ -31,14 +32,28 @@ struct Tokens
     size_t size        = 0;
 };
 
-Tokens      readTokens (const char* filename);
 
-Token       readToken  (char* buffer, size_t* curPos, size_t* curLinePos, size_t* curLineNum);
+ErrorCode getTokens(const char* fileIn);
 
-ErrorCode   skipSpaces (char* buffer, size_t* curPos, size_t* curLinePos, size_t* curLineNum);
+size_t skipSymbols();
 
-bool        requireOp  (Tokens* tokens, Operator op);
+bool getToken();
 
-size_t      countChars (char* buffer, size_t* curPos);
+bool getOpToken();
+
+bool getConstToken();
+
+bool getNametToken();
+
+Node* createOpToken(Operator op);
+
+Node* createConstToken(double value);
+
+Node* createFuncToken(char* funcName);
+
+Node* createVarToken(char* varName);
+
+void PrintTokens ();
+
 
 #endif

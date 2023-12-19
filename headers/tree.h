@@ -72,6 +72,14 @@ Node*     copyNode          (Node* originalNode);
 
 Node*     createNode        (NodeElem_t data, Type type, Node* left, Node* right);
 
+Node*     createConstNode   (double value);
+
+Node*     createVarNode     (char* varName);
+
+Node*     createFuncNode    (char* funcName);
+
+Node*     createOpNode      (Operator op);
+
 char*     getOpName         (Operator op);
 
 int       countMaxDepth     (Node* node);
