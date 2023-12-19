@@ -125,7 +125,7 @@ static ErrorCode _checkTreeLinks(Tree* tree, Node* node, size_t* counter)
     return OK;
 }
 
-Node* createNode(NodeElem_t data, char type, Node* left, Node* right)  
+Node* createNode(NodeElem_t data, Type type, Node* left, Node* right)  
 {
     SafeCalloc(newNode, 1, Node, NULL);
 
@@ -396,7 +396,7 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
 
 char* getOpName(Operator op)
 {
-    #define DEF_OP(keyword, name) case #name: return #keyword;
+    #define DEF_OP(keyword, name) case name: return #keyword;
 
     switch (op)
     {

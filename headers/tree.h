@@ -9,35 +9,11 @@
 
 enum Operator
 {
-    ADD,
-    MUL,
-    SUB,
-    DIV,
-    SIN,
-    COS,
-    TG,
-    CTG,
-    LN,
-    POW,
+    #define DEF_OP(keyword, name) name,
 
-    FUNCTION,
-    IF,
-    WHILE,
-    RETURN,
-    PRINT,
-    INPUT,
-    VARDEC,
-    MORE,
-    LESS,
-    EQ,
-    NEQ,
-    ASSIGN,
-    OPENRB,
-    CLOSERB,
-    OPENSB,
-    CLOSESB,
-    ENDLINE, 
-    ENDPROGRAM
+    #include "defop.h"
+
+    #undef DEF_OP
 };
 
 enum Type
@@ -94,7 +70,7 @@ ErrorCode connectNode       (Node* node, Node* leftChild, Node* rightChild);
 
 Node*     copyNode          (Node* originalNode);
 
-Node*     createNode        (NodeElem_t data, char type, Node* left, Node* right);
+Node*     createNode        (NodeElem_t data, Type type, Node* left, Node* right);
 
 char*     getOpName         (Operator op);
 

@@ -6,8 +6,6 @@
 
 #include <stdlib.h>
 
-typedef int(*compareFunc_t) (const void*, const void* );
-
 /**
  * 
  * Enum for sort modes.
@@ -76,23 +74,9 @@ enum CORRECTFILE
 struct Text 
 {
     char*  buffer;
-    char* const* lineptrs;
-    size_t size,
-           numTokens;
-    struct Line* tokens;
+    size_t size;
 };
 
-/**
- * 
- * Line structure that contains a string and the length of the string.
- * 
- */
-
-struct Line
-{
-    char* string;
-    size_t length;
-};
 
 /**
  * 
@@ -116,17 +100,7 @@ void CreateText(Text* text, const char* filename, size_t sortmode);
  * 
  */
 
-void AppendText(Text* text, const char* filename);
 
-/**
- * 
- * \brief Frees memory space.
- * 
- * @param[in] text - text structure.
- * @param[in] filename - name of file.
- * @param[in] sortmode - sort mode.
- * 
- */
 
 void DestroyText(Text* text);
 
@@ -157,19 +131,6 @@ size_t getSize(const char* filename);
 
 /**
  * 
- * \brief Gets the amount of tokens.
- * 
- * @param[in] filename - name of file.
- * @param[out] tokens - amount of tokens.
- * 
- * \return size of file.
- * 
- */
-
-size_t countTokens(const Text* text);
-
-/**
- * 
  * \brief Buffer parser.
  * 
  * @param[in] text - text structure.
@@ -181,137 +142,5 @@ size_t countTokens(const Text* text);
  */
 
 char* parseBuf(Text* text, const char* filename);
-
-/**
- * 
- * \brief  Gets an array of line pointers.
- * 
- * @param[in] filename - name of file.
- * @param[out] length - size of file.
- * 
- * \return size of file.
- * 
- */
-
-char* const* getTokenPointers(Text *text);
-
-/**
- * 
- * \brief Gets the string of the line.
- * 
- * @param[in] text - text structure.
- * @param[in] numToken - the number of line that needs to be return.
- * @param[out] string - line string.
- * 
- * \return string.
- * 
- */
-
-char* getToken(Text* text, size_t numToken);
-
-/**
- * 
- * \brief Gets lots of line structures.
- * 
- * @param[in] text - text structure.
- * @param[out] struct Line.   
- * 
- * \return string.
- * 
- */
-
-struct Line* getTokens(Text* text);
-
-/**
- * 
- * \brief Frees up memory space.
- * 
- * @param[in] text - text structure.
- * 
- */
-
-/**
- * 
- * \brief Sorts the text with the chosen sort mode.
- * 
- * @param[in] text - text structure.
- * @param[in] sortmode - sort mode.
- * 
- */
-
-void generalSort(Text* text, size_t sortmode);
-
-/**
- * 
- * \brief Void Quick Sort realisation.
- * 
- * @param[in] array - pointer.
- * @param[in] start - index of first element.
- * @param[in] end - index of last element.
- * @param[in] elemSize - size of array element.
- * @param[in] compareFunc - compare function.
- * 
- */
-
-void quickSort(void* array, int start, int end, size_t elemSize, compareFunc_t compareFunc);
-
-/**
- * 
- * \brief Auxiliary function for qsort.
- * 
- * @param[in] array - pointer.
- * @param[in] start - index of first element.
- * @param[in] end - index of last element.
- * @param[in] elemSize - size of array element.
- * @param[in] compareFunc - compare function.
- * 
- * \return value of pivot. 
- * 
- */
-
-
-int partition(void* array, int left, int right, size_t elemSize, compareFunc_t compareFunc);
-
-/**
- * 
- * \brief Bubble Sort realisation.
- * 
- * @param[in] array - pointer.
- * @param[in] tokens - amount of tokens.
- * @param[in] elemSize - size of array element.
- * @param[in] compareFunc - compare function.
- * 
- */
-
-void bubbleSort(void* array, size_t tokens, const size_t elemSize, compareFunc_t compareFunc);
-
-/**
- * 
- * \brief Forward string comparer.
- * 
- * @param[in] a - pointer.
- * @param[in] b - pointer.
- * 
- * \return value < 0 if lexicographically a < b, value = 0 if a = b, value a > b if lexicographically a > b.
- * 
- */
-
-
-int compareStringForw(const void* a, const void* b);
-
-/**
- * 
- * \brief Backward string comparer.
- * 
- * @param[in] a - pointer.
- * @param[in] b - pointer.
- * 
- * \return Same as @ref compareStringForw but compares from end to start.
- * 
- */
-
-int compareStringBack(const void* a, const void* b);
-
-int StringIsEmpty(const Line* line);
 
 #endif

@@ -1,27 +1,5 @@
 #include "frontend.h"
 
-struct Token
-{
-    NodeElem_t data;
-
-    Type       type;
-
-    size_t     linePos;
-
-    size_t     lineNum;
-
-    size_t     length;
-};
-
-struct Tokens
-{
-    Token* tokens;
-
-    size_t curTokenNum;
-
-    size_t size = 0;
-};
-
 Tokens readTokens (const char* filename)
 {
     AssertSoft(filename, {});
@@ -29,6 +7,7 @@ Tokens readTokens (const char* filename)
     Text text = {};
 
     CreateText(&text, filename, NONE);
+    printf("%d", text.size);
 
     size_t curLineNum = 0;
 
@@ -42,11 +21,25 @@ Tokens readTokens (const char* filename)
 
     tokens.tokens = temptokens;
 
+    skipSpaces(text.buffer, &curPos, &curLinePos, &curLineNum);
+
     while (text.buffer[curPos] != '\0') // TOKENTYPE
     {
-        skipSpaces(text.buffer, &curPos, &curLinePos, &curLineNum);
+        printf("%d\n", curPos);
 
         tokens.tokens[tokens.curTokenNum] = readToken(text.buffer, &curPos, &curLinePos, &curLineNum);
+
+        printf("token [%d](%d): %s in line: %zu, pos: %zu\n", tokens.curTokenNum, tokens.tokens[tokens.curTokenNum].data.op,
+                                    tokens.tokens[tokens.curTokenNum].lineNum,
+                                    tokens.tokens[tokens.curTokenNum].linePos);
+
+        printf("%d\n", curPos);
+
+        tokens.size        += 1;
+
+        tokens.curTokenNum += 1;
+
+        skipSpaces(text.buffer, &curPos, &curLinePos, &curLineNum);
     }
 
     tokens.curTokenNum = 0;
@@ -78,23 +71,39 @@ Token readToken (char* buffer, size_t* curPos, size_t* curLinePos, size_t* curLi
                                                               \
         *curLinePos += token.length;                          \
                                                               \
+        return token;                                         \
     }
 
     #include "defop.h"
 
     #undef DEF_OP
 
-    char tempstr[MAX_STR_SIZE] = {};
+    token.length = countChars(buffer, curPos);
 
-    int charsRead = sscanf(buffer, "%[A-Za-z0-9_]", tempstr); // переменные и числа
+    printf("sdsd %zu", countChars(buffer, curPos));
 
-    token.data.name = buffer;
+    token.data.name = buffer + *curPos;
 
-    *curPos     += charsRead;
+    *curPos     += token.length;
 
-    *curLinePos += charsRead;
+    *curLinePos += token.length;
 
     return token;
+}
+
+size_t countChars (char* buffer, size_t* curPos)
+{
+    size_t charsRead = 0;
+
+    while (isalpha(*(buffer + charsRead + *curPos)) || *(buffer + charsRead + *curPos) == '?')
+    {
+        charsRead += 1;
+        printf("%d\n", charsRead);
+    }
+
+    printf("%d\n", charsRead);
+
+    return charsRead;
 }
 
 ErrorCode skipSpaces (char* buffer, size_t* curPos, size_t* curLinePos, size_t* curLineNum)

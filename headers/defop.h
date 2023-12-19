@@ -12,10 +12,10 @@ DEF_OP( "wisnae",         NEQ) // '!='
 DEF_OP( "gie",            ASSIGN) // '='
 DEF_OP( "fit",            OPENRB) // '('
 DEF_OP( "like?",          CLOSERB) // ')'
-DEF_OP( "ya",             OPENSB) // '}'
-DEF_OP( "gan?",           CLOSESB) // '{'
-DEF_OP( "!",              ENDLINE) // ';'
-DEF_OP( "FREEDOM!!!",     ENDPROGRAM)
+DEF_OP( "ya",                 OPENSB) // '{'
+DEF_OP( "gan?",              CLOSESB) // '}'
+DEF_OP( "!",                 ENDLINE) // ';'
+DEF_OP( "FREEDOM",     ENDPROGRAM)
 DEF_OP( "+",              ADD)
 DEF_OP( "-",              SUB)
 DEF_OP( "*",              MUL)
@@ -26,5 +26,4 @@ DEF_OP( "tg",             TG)
 DEF_OP( "ctg",            CTG)
 DEF_OP( "ln",             LN)
 DEF_OP( "^",              POW)
-
-DEF_OP( ",",              COMMA      )
+DEF_OP( ",",              COMMA)
