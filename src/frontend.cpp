@@ -1,7 +1,6 @@
 #include "frontend.h"
 
-const char* expression = " ya"
-                         " fa fit x mair 0 like?"
+const char* expression = " fa fit x mair 0 like?"
                          " ya" 
                          " x gie 1 !"
                          " ran fit x sma 5 like?"
@@ -10,7 +9,7 @@ const char* expression = " ya"
                          " gan?"
                          " fa fit x mair 1 like?"
                          " ya"
-                         " x gie 1000 - 7 !"
+                         " x gie 1000 - 7 ! y gie 0 !"
                          " gan?"
                          " gan?";
                          
