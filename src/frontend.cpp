@@ -46,7 +46,7 @@ ErrorCode skipSymbols (Tokens* tkns, char* buffer)
         return 0;
     }
 
-    while (isspace(*buffer) || *buffer == '\t' || *buffer == '\n' || *buffer == '\r')
+    while (isspace (curSym) || curSym == '\t' || curSym == '\n' || curSym == '\r')
     {
         if (curSym == '\n')
         {
@@ -69,13 +69,13 @@ bool getToken (Tokens* tkns, char* buffer)
 {
     skipSymbols (tkns, buffer);
 
-    if ( getKeywordToken (tkns, buffer) )
+    if (getKeywordToken (tkns, buffer))
         return true;
     
-    if ( getConstToken (tkns, buffer) )
+    if (getConstToken (tkns, buffer))
         return true;
     
-    if ( getNameToken (tkns, buffer) )
+    if (getNameToken (tkns, buffer))
         return true;
 
     return false;
@@ -88,13 +88,12 @@ bool getKeywordToken (Tokens* tkns, char* buffer)
 
     #define DEF_KEYWORD(keyword, name)                              \
                                                                     \
-    if (strncmp(keyword, curPtr, sizeof(keyword) - 1) == 0)         \
+    if (strncmp (keyword, curPtr, sizeof(keyword) - 1) == 0)        \
     {                                                               \
         tkns->curSymPos  += sizeof(keyword) - 1;                    \
-                                                                    \
         tkns->curLinePos += sizeof(keyword) - 1;                    \
                                                                     \
-        createKeywordToken(tkns, name);                             \
+        createKeywordToken (tkns, name);                            \
                                                                     \
         return true;                                                \
     }
@@ -108,19 +107,17 @@ bool getKeywordToken (Tokens* tkns, char* buffer)
 
 bool getConstToken (Tokens* tkns, char* buffer)
 {
-    if (isdigit(curSym))
+    if (isdigit (curSym))
     {
         char* endPtr = NULL;
 
-        double value = strtod(curPtr, &endPtr);
+        double value = strtod (curPtr, &endPtr);
 
         tkns->curSymPos  += endPtr - curPtr;
 
         tkns->curLinePos += endPtr - curPtr;
 
-        AssertSoft(createConstToken(tkns, value), NULL_PTR);
-
-        printf("const token created!\n");
+        createConstToken (tkns, value);
 
         return true;
     }
@@ -130,26 +127,26 @@ bool getConstToken (Tokens* tkns, char* buffer)
 
 const int MAX_IDENTIFIER_NAME = 32;
 
-bool getNameToken(Tokens* tkns, char* buffer)
+bool getNameToken (Tokens* tkns, char* buffer)
 {
     SafeCalloc(name, MAX_IDENTIFIER_NAME, char, false);
 
-    sscanf(curPtr, "%[a-zA-Z_0-9]*", name);
+    sscanf (curPtr, "%[a-zA-Z_0-9]*", name);
 
     const char* endPtr = strchr (curPtr, ' ');
 
-    int charsRead = endPtr - curPtr + 1; // func fit ... like?
+    int charsRead = endPtr - curPtr; // func fit ... like?
 
     if (charsRead < 0 || charsRead > MAX_IDENTIFIER_NAME)
         return false;
 
-    printf("-> %d\n", charsRead);
+    printf ("-> %d\n", charsRead);
 
     tkns->curLinePos += charsRead;
 
     tkns->curSymPos  += charsRead; 
 
-    if (tkns->token[tkns->curTokenNum - 1].elem->type == FUNCDEC) // ???
+    if (tkns->token[tkns->curTokenNum - 1].elem->data.op == FUNCDEC) // ???
     {
         createFuncToken (tkns, name);
 
@@ -173,7 +170,7 @@ ErrorCode updateToken (Tokens* tkns, Node* node)
 
     tkns->curTokenNum++;
 
-    printf("updated! in line: %d, pos: %d\n", tkns->curLineNum, tkns->curLinePos);
+    printf ("updated! in line: %d, pos: %d\n", tkns->curLineNum, tkns->curLinePos);
 
     return OK;
 }
@@ -204,7 +201,7 @@ ErrorCode createFuncToken (Tokens* tkns, char* funcName)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken(tkns, createFuncNode(funcName));
+    updateToken (tkns, createFuncNode(funcName));
 
     tkns->curTokenStatus = FUNC;
 
@@ -215,7 +212,7 @@ ErrorCode createVarToken (Tokens* tkns, char* varName)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken(tkns, createVarNode(varName));
+    updateToken (tkns, createVarNode(varName));
 
     tkns->curTokenStatus = VAR;
 

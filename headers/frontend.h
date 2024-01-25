@@ -36,30 +36,29 @@ struct Tokens
     Type curTokenStatus = NONE;
 };
 
+Tokens getTokens             (const char* fileIn);
 
-Tokens getTokens (const char* fileIn);
+ErrorCode skipSymbols        (Tokens* tkns, char* buffer);
 
-ErrorCode skipSymbols (Tokens* tkns, char* buffer);
+bool getToken                (Tokens* tkns, char* buffer);
 
-bool getToken(Tokens* tkns, char* buffer);
+bool getKeywordToken         (Tokens* tkns, char* buffer);
 
-bool getKeywordToken (Tokens* tkns, char* buffer);
+bool getConstToken           (Tokens* tkns, char* buffer);
 
-bool getConstToken (Tokens* tkns, char* buffer);
-
-bool getNameToken (Tokens* tkns, char* buffer);
+bool getNameToken            (Tokens* tkns, char* buffer);
 
 ErrorCode createKeywordToken (Tokens* tkns, Keyword op);
 
-ErrorCode createConstToken (Tokens* tkns, double value);
+ErrorCode createConstToken   (Tokens* tkns, double value);
 
-ErrorCode createFuncToken (Tokens* tkns, char* funcName);
+ErrorCode createFuncToken    (Tokens* tkns, char* funcName);
 
-ErrorCode createVarToken (Tokens* tkns, char* varName);
+ErrorCode createVarToken     (Tokens* tkns, char* varName);
 
-ErrorCode updateToken (Tokens* tkns, Node* node);
+ErrorCode updateToken        (Tokens* tkns, Node* node);
 
-ErrorCode PrintTokens (Tokens* tkns); 
+ErrorCode PrintTokens        (Tokens* tkns); 
 
 Node* GetG();
 
