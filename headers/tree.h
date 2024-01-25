@@ -7,13 +7,13 @@
 
 #define SPECIFIER "%c"
 
-enum Operator
+enum Keyword
 {
-    #define DEF_OP(keyword, name) name,
+    #define DEF_KEYWORD(keyword, name) name,
 
-    #include "defop.h"
+    #include "keywords.def"
 
-    #undef DEF_OP
+    #undef DEF_KEYWORD
 };
 
 enum Type
@@ -22,14 +22,14 @@ enum Type
     VAR,
     CONST,
     OP,
-    NO_TYPE
+    NONE
 };
 
 union NodeElem_t
 {
     double     constVal;
 
-    Operator   op;
+    Keyword    op;
 
     char*      name;
 };
@@ -38,7 +38,7 @@ struct Node
 {
     NodeElem_t data       = {};
 
-    Type       type       = NO_TYPE; // WARNING: CHANGED
+    Type       type       = NONE; // WARNING: CHANGED
 
     Node*      parent;
 
@@ -78,9 +78,9 @@ Node*     createVarNode     (char* varName);
 
 Node*     createFuncNode    (char* funcName);
 
-Node*     createOpNode      (Operator op);
+Node*     createKeywordNode (Keyword op);
 
-char*     getOpName         (Operator op);
+char*     getKeywordName         (Keyword op);
 
 int       countMaxDepth     (Node* node);
 

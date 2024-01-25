@@ -7,29 +7,36 @@
 #include <sys/stat.h>
 #include <ctype.h>
 #include "textfuncs.h"
-#include "errors.h"
+#include "utils.h"
 
-void CreateText(Text* text, const char* filename, size_t sortmode)
+ErrorCode CreateText (Text* text, const char* filename)
 {
-    myAssert(text, NULL_PTR);
+    AssertSoft(text,     NULL_PTR);
+    AssertSoft(filename, NULL_PTR);
 
-    text->size     = getSize(filename);
+    text->size   = getSize(filename);
 
-    text->buffer   = parseBuf(text, filename);
+    text->buffer = parseBuf(text, filename);
+
+    return OK;
 }
 
-void DestroyText(Text* text)
+ErrorCode DestroyText (Text* text)
 {
+    AssertSoft(text->buffer, NULL_PTR);
+
     free((void*)text->buffer);
+
+    return OK;
 }
 
-char* parseBuf(Text* text, const char* filename)
+char* parseBuf (Text* text, const char* filename)
 {   
-    myAssert(text, NULL_PTR);
+    AssertSoft(text, NULL);
 
     FILE* fp = fopen(filename, "rb");
 
-    char* buffer = (char*)calloc(text->size + 2, sizeof(char));
+    char* buffer = (char*)calloc(text->size + 1, sizeof(char));
 
     fread(buffer, sizeof(char), text->size, fp);
 
@@ -40,9 +47,9 @@ char* parseBuf(Text* text, const char* filename)
     return buffer;
 }
 
-size_t getSize(const char* filename)
+size_t getSize (const char* filename)
 {
-    myAssert(filename, NULL_PTR);
+    AssertSoft(filename, NULL_PTR);
 
     struct stat stats = {};
     stat(filename, &stats);
@@ -50,16 +57,17 @@ size_t getSize(const char* filename)
     return stats.st_size;
 }
 
-size_t CheckFile(const char* filename)
+size_t CheckFile (const char* filename)
 {
-    myAssert(filename, NULL_PTR);
+    AssertSoft(filename, NULL_PTR);
 
     FILE* fp = fopen(filename, "rb");
-        if (fp == NULL)
-          {
-            printf("Unable to open file: \"%s\"\n", filename);
-            return INCORRECT;
-          }
+    
+    if (fp == NULL)
+    {
+        printf("Unable to open file: \"%s\"\n", filename);
+        return INCORRECT;
+    }
 
     fclose(fp);
 

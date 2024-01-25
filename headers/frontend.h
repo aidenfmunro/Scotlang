@@ -12,9 +12,7 @@
 
 struct Token
 {
-    NodeElem_t data;
-
-    Type       type;
+    Node*      elem;
 
     size_t     linePos;
 
@@ -25,35 +23,43 @@ struct Token
 
 struct Tokens
 {
-    Token* tokens;
+    Token* token;
 
-    size_t curTokenNum = 0;
+    size_t curTokenNum  = 0;
 
-    size_t size        = 0;
+    size_t curLinePos   = 0;
+
+    size_t curLineNum   = 0;
+
+    size_t curSymPos    = 0;
+
+    Type curTokenStatus = NONE;
 };
 
 
-ErrorCode getTokens(const char* fileIn);
+Tokens getTokens (const char* fileIn);
 
-size_t skipSymbols();
+ErrorCode skipSymbols (Tokens* tkns, char* buffer);
 
-bool getToken();
+bool getToken(Tokens* tkns, char* buffer);
 
-bool getOpToken();
+bool getKeywordToken (Tokens* tkns, char* buffer);
 
-bool getConstToken();
+bool getConstToken (Tokens* tkns, char* buffer);
 
-bool getNameToken();
+bool getNameToken (Tokens* tkns, char* buffer);
 
-Node* createOpToken(Operator op);
+ErrorCode createKeywordToken (Tokens* tkns, Keyword op);
 
-Node* createConstToken(double value);
+ErrorCode createConstToken (Tokens* tkns, double value);
 
-Node* createFuncToken(char* funcName);
+ErrorCode createFuncToken (Tokens* tkns, char* funcName);
 
-Node* createVarToken(char* varName);
+ErrorCode createVarToken (Tokens* tkns, char* varName);
 
-void PrintTokens ();
+ErrorCode updateToken (Tokens* tkns, Node* node);
+
+ErrorCode PrintTokens (Tokens* tkns); 
 
 Node* GetG();
 

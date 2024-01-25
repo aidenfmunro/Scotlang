@@ -1,14 +1,9 @@
 #include <stdio.h>
 #include "frontend.h"
 
-
 int main(void)
 {
-    getTokens("ex.sc");
+    Tokens tkns = getTokens("ex.sc");
 
-    PrintTokens();
-
-    Node* root = GetG();
-
-    DumpTreeGraph(root);
+    PrintTokens(&tkns);
 }

@@ -1,110 +1,126 @@
 #include "frontend.h"
 
-const char* expression = "if (x > 0)"
-                         "{"
-                         "x = x + 1;"
-                         "}";
-
-                         
-
-Type curTokenStatus = NO_TYPE;
-
-Node* tokens[100] = {};
-
-size_t curTokenNum = 0;
-
-ErrorCode getTokens(const char* fileIn)
+Tokens getTokens (const char* fileIn)
 {
-    Text source = {};
+    Text src = {};
 
-    CreateText(&source, fileIn, NONE);
+    CreateText (&src, fileIn);
 
-    while (*expression)
+    SafeCalloc(tkn, src.size, Token, {});
+
+    Tokens tkns = {.token = tkn};
+
+    printf("file size: %d\n", src.size);
+
+    while (src.buffer)
     {
-        skipSymbols();
+        skipSymbols (&tkns, src.buffer);
 
-        if (*expression == '\0')
+        if (*src.buffer == '\0')
             break;
 
-        printf("cur symb: %c\n", *expression);
-
-        if (! getToken())
+        if ( ! getToken (&tkns, src.buffer) )
             break;
     }
 
-    for (size_t i = 0; i < 4; i++)
-    {
-        printf("%p\n", tokens[i]);
-    }
+    tkns.token = (Token*)realloc(tkns.token, tkns.curTokenNum);
 
-    return OK; 
+    printf("Amount of tokens eatten: %d!\n", tkns.curTokenNum);
+
+    return tkns; 
 }
 
+#define curSym   *(buffer + tkns->curSymPos)
+#define curPtr    (buffer + tkns->curSymPos)
+#define curToken  tkns->token[tkns->curTokenNum]
 
-
-size_t skipSymbols()
+ErrorCode skipSymbols (Tokens* tkns, char* buffer)
 {
+    AssertSoft(tkns,    NULL);
+    AssertSoft(buffer,  NULL);
+
     size_t charsSkipped = 0;
 
-    if (*expression == '\0')
-        return 0;
-
-    while (isspace(*expression) || *expression == '\t' || *expression == '\n' || *expression == '\r')
+    if (*buffer == '\0')
     {
-        expression++;
-        charsSkipped++;
+        return 0;
     }
 
-    return charsSkipped;
-}
+    while (isspace(*buffer) || *buffer == '\t' || *buffer == '\n' || *buffer == '\r')
+    {
+        if (curSym == '\n')
+        {
+            tkns->curLineNum++;
 
-bool getToken()
-{
-    skipSymbols();
+            tkns->curLinePos = 0;
+        }
+        else
+        {
+            tkns->curLinePos++;    
+        }
 
-    if ( getOpToken() )
-        return true;
-    
-    if ( getConstToken() )
-        return true;
-    
-    return getNameToken();
-}
-
-bool getOpToken()
-{
-    if (*expression == '\0')
-        return false;
-
-    #define DEF_OP(keyword, name)                                   \
-                                                                    \
-    if (strncmp(keyword, expression, sizeof(keyword) - 1) == 0)     \
-    {                                                               \
-        expression += sizeof(keyword) - 1;                          \
-                                                                    \
-        createOpToken(name);                                        \
-                                                                    \
-        return true;                                                \
+        tkns->curSymPos++;
     }
 
-    #include "defop.h"
+    return OK;
+}
 
-    #undef DEF_OP
+bool getToken (Tokens* tkns, char* buffer)
+{
+    skipSymbols (tkns, buffer);
+
+    if ( getKeywordToken (tkns, buffer) )
+        return true;
+    
+    if ( getConstToken (tkns, buffer) )
+        return true;
+    
+    if ( getNameToken (tkns, buffer) )
+        return true;
 
     return false;
 }
 
-bool getConstToken()
+bool getKeywordToken (Tokens* tkns, char* buffer)
 {
-    if (isdigit(*expression))
+    if (curSym == '\0')
+        return false;
+
+    #define DEF_KEYWORD(keyword, name)                              \
+                                                                    \
+    if (strncmp(keyword, curPtr, sizeof(keyword) - 1) == 0)         \
+    {                                                               \
+        tkns->curSymPos  += sizeof(keyword) - 1;                    \
+                                                                    \
+        tkns->curLinePos += sizeof(keyword) - 1;                    \
+                                                                    \
+        createKeywordToken(tkns, name);                             \
+                                                                    \
+        return true;                                                \
+    }
+
+    #include "keywords.def"
+
+    #undef DEF_KEYWORD
+
+    return false;
+}
+
+bool getConstToken (Tokens* tkns, char* buffer)
+{
+    if (isdigit(curSym))
     {
         char* endPtr = NULL;
 
-        double value = strtod(expression, &endPtr);
+        double value = strtod(curPtr, &endPtr);
 
-        expression += endPtr - expression;
+        tkns->curSymPos  += endPtr - curPtr;
 
-        createConstToken(value);
+        tkns->curLinePos += endPtr - curPtr;
+
+        AssertSoft(createConstToken(tkns, value), NULL_PTR);
+
+        printf("const token created!\n");
 
         return true;
     }
@@ -114,107 +130,119 @@ bool getConstToken()
 
 const int MAX_IDENTIFIER_NAME = 32;
 
-bool getNameToken()
+bool getNameToken(Tokens* tkns, char* buffer)
 {
-    if (*expression == '\0')
-        return false;
-
     SafeCalloc(name, MAX_IDENTIFIER_NAME, char, false);
 
-    sscanf(expression, "%[a-zA-Z_0-9]*", name);
+    sscanf(curPtr, "%[a-zA-Z_0-9]*", name);
 
-    const char* endPtr = strchr(expression, ' ');
+    const char* endPtr = strchr (curPtr, ' ');
 
-    int charsRead = endPtr - expression + 1; // func fit ... like?
+    int charsRead = endPtr - curPtr + 1; // func fit ... like?
 
     if (charsRead < 0 || charsRead > MAX_IDENTIFIER_NAME)
         return false;
 
     printf("-> %d\n", charsRead);
 
-    expression += charsRead;
+    tkns->curLinePos += charsRead;
 
-    if (tokens[curTokenNum - 1]->type == FUNC && tokens[curTokenNum - 1]->data.op == FUNCDEC)
+    tkns->curSymPos  += charsRead; 
+
+    if (tkns->token[tkns->curTokenNum - 1].elem->type == FUNCDEC) // ???
     {
-        createFuncNode(name);
+        createFuncToken (tkns, name);
 
         return true;
     }
 
-    if (strncmp(expression, "fit", 3) == 0)
-    {
-        createFuncToken(name);
-
-        return true;
-    }
-
-    createVarToken(name);
+    createVarToken (tkns, name);
 
     return true;
 }
 
-Node* createOpToken(Operator op)
+ErrorCode updateToken (Tokens* tkns, Node* node)
 {
-    Node* node = createOpNode(op);
+    AssertSoft(tkns, NULL_PTR);
 
-    tokens[curTokenNum++] = node;
+    curToken.elem    = node;
 
-    curTokenStatus = OP;
+    curToken.linePos = tkns->curLinePos;
 
-    return node;
+    curToken.lineNum = tkns->curLineNum;
+
+    tkns->curTokenNum++;
+
+    printf("updated! in line: %d, pos: %d\n", tkns->curLineNum, tkns->curLinePos);
+
+    return OK;
 }
 
-Node* createConstToken(double value)
+ErrorCode createKeywordToken (Tokens* tkns, Keyword op)
 {
-    Node* node = createConstNode(value);
+    AssertSoft(tkns, NULL_PTR);
 
-    tokens[curTokenNum++] = node;
+    updateToken (tkns, createKeywordNode(op));
 
-    curTokenStatus = CONST;
+    tkns->curTokenStatus = OP;
 
-    return node; 
+    return OK;
 }
 
-Node* createFuncToken(char* funcName)
+ErrorCode createConstToken (Tokens* tkns, double value)
 {
-    Node* node = createFuncNode(funcName);
+    AssertSoft(tkns, NULL_PTR);
 
-    tokens[curTokenNum++] = node;
+    updateToken (tkns, createConstNode(value));
 
-    curTokenStatus = FUNC;
+    tkns->curTokenStatus = CONST;
 
-    return node;
+    return OK; 
 }
 
-Node* createVarToken(char* varName)
+ErrorCode createFuncToken (Tokens* tkns, char* funcName)
 {
-    Node* node = createVarNode(varName);
+    AssertSoft(tkns, NULL_PTR);
 
-    tokens[curTokenNum++] = node;
+    updateToken(tkns, createFuncNode(funcName));
 
-    curTokenStatus = VAR;
+    tkns->curTokenStatus = FUNC;
 
-    return node;
+    return OK;
 }
 
-void PrintTokens () 
+ErrorCode createVarToken (Tokens* tkns, char* varName)
 {
-    for (size_t i = 0; i < curTokenNum; i++) 
+    AssertSoft(tkns, NULL_PTR);
+
+    updateToken(tkns, createVarNode(varName));
+
+    tkns->curTokenStatus = VAR;
+
+    return OK;
+}
+
+ErrorCode PrintTokens (Tokens* tkns) 
+{
+    for (size_t i = 0; i < tkns->curTokenNum; i++) 
     {
-        if (tokens[i]->type == OP)
-            printf ("OP    = %d\n", tokens[i]->data.op);
+        if (tkns->token[i].elem->type == OP)
+            printf ("OP    = %d\n", tkns->token[i].elem->data.op);
 
-        if (tokens[i]->type == FUNC)
-            printf ("FUNC  = %s\n", tokens[i]->data.name);
+        if (tkns->token[i].elem->type == FUNC)
+            printf ("FUNC  = %s\n", tkns->token[i].elem->data.name);
 
-        if (tokens[i]->type == VAR)
-            printf ("VAR   = %s\n", tokens[i]->data.name);
+        if (tkns->token[i].elem->type == VAR)
+            printf ("VAR   = %s\n", tkns->token[i].elem->data.name);
 
-        if (tokens[i]->type == CONST)
-            printf ("CONST = %lg\n", tokens[i]->data.constVal);
+        if (tkns->token[i].elem->type == CONST)
+            printf ("CONST = %lg\n", tkns->token[i].elem->data.constVal);
     }
+
+    return OK;
 }
 
+/*
 
 #define CHECKOPTOKEN(oper) (tokens[curPos]->data.op == oper)
 
@@ -420,66 +448,7 @@ Node* GetP()
         return GetName();
     }
 }
+*/
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "if"'('P')''{'E'}'
-
-// func main(a, b)
-//{
-//  var x = 5;
-//  
-//  if (x < 5)
-//  {
-//      x = x * 2;
-//  }
-//
-//  return;
-//}
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-// как организовать локальные переменные в функции ???

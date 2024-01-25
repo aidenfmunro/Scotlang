@@ -255,7 +255,7 @@ Node* createFuncNode(char* funcName)
     return createNode(data, FUNC, nullptr, nullptr);
 }
 
-Node* createOpNode(Operator op)
+Node* createKeywordNode(Keyword op)
 {
     NodeElem_t data = {};
     
@@ -393,7 +393,7 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
     if (node->type == OP)
     {
         dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"coral\"]\n",
-                                                          nodeNum, getOpName(node->data.op));
+                                                          nodeNum, getKeywordName(node->data.op));
     }
 
     if (node->type == CONST)
@@ -436,23 +436,22 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
                             curNodeNum, childNum);
     }
     
-    
     return OK;
 }
 
-char* getOpName(Operator op)
+char* getKeywordName (Keyword op)
 {
-    #define DEF_OP(keyword, name) case name: return #name;
+    #define DEF_KEYWORD(keyword, name) case name: return #name;
 
     switch (op)
     {
-        #include "defop.h"
+        #include "keywords.def"
 
         default:
             return "UNKNOWN";
     }
 
-    #undef DEF_OP
+    #undef DEF_KEYWORD
 }
 
 #undef dumpGraph
