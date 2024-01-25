@@ -23,8 +23,6 @@ Tokens getTokens (const char* fileIn)
             break;
     }
 
-    tkns.token = (Token*)realloc(tkns.token, tkns.curTokenNum);
-
     printf("Amount of tokens eatten: %d!\n", tkns.curTokenNum);
 
     return tkns; 
@@ -135,7 +133,7 @@ bool getNameToken (Tokens* tkns, char* buffer)
 
     const char* endPtr = strchr (curPtr, ' ');
 
-    int charsRead = endPtr - curPtr; // func fit ... like?
+    int charsRead = endPtr - curPtr;
 
     if (charsRead < 0 || charsRead > MAX_IDENTIFIER_NAME)
         return false;
@@ -150,10 +148,14 @@ bool getNameToken (Tokens* tkns, char* buffer)
     {
         createFuncToken (tkns, name);
 
+        printf("name: %s\n", name);
+
         return true;
     }
 
     createVarToken (tkns, name);
+
+    printf("name: %s\n", name);
 
     return true;
 }
@@ -170,7 +172,7 @@ ErrorCode updateToken (Tokens* tkns, Node* node)
 
     tkns->curTokenNum++;
 
-    printf ("updated! in line: %d, pos: %d\n", tkns->curLineNum, tkns->curLinePos);
+    printf ("updated token %d! in line: %d, pos: %d\n", tkns->curTokenNum, tkns->curLineNum, tkns->curLinePos);
 
     return OK;
 }
@@ -179,7 +181,7 @@ ErrorCode createKeywordToken (Tokens* tkns, Keyword op)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken (tkns, createKeywordNode(op));
+    updateToken (tkns, createKeywordNode (op));
 
     tkns->curTokenStatus = OP;
 
@@ -190,7 +192,7 @@ ErrorCode createConstToken (Tokens* tkns, double value)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken (tkns, createConstNode(value));
+    updateToken (tkns, createConstNode (value));
 
     tkns->curTokenStatus = CONST;
 
@@ -201,7 +203,7 @@ ErrorCode createFuncToken (Tokens* tkns, char* funcName)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken (tkns, createFuncNode(funcName));
+    updateToken (tkns, createFuncNode (funcName));
 
     tkns->curTokenStatus = FUNC;
 
@@ -212,7 +214,7 @@ ErrorCode createVarToken (Tokens* tkns, char* varName)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken (tkns, createVarNode(varName));
+    updateToken (tkns, createVarNode (varName));
 
     tkns->curTokenStatus = VAR;
 
