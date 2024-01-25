@@ -77,7 +77,6 @@ struct Text
     size_t size;
 };
 
-
 /**
  * 
  * \brief Creates a text with the chosen sortmode.

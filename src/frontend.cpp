@@ -1,17 +1,10 @@
 #include "frontend.h"
 
-const char* expression = " fa fit x mair 0 like?"
-                         " ya" 
-                         " x gie 1 !"
-                         " ran fit x sma 5 like?"
-                         " ya"
-                         " x gie x + 1 !"
-                         " gan?"
-                         " fa fit x mair 1 like?"
-                         " ya"
-                         " x gie 1000 - 7 ! y gie 0 !"
-                         " gan?"
-                         " gan?";
+const char* expression = "if (x > 0)"
+                         "{"
+                         "x = x + 1;"
+                         "}";
+
                          
 
 Type curTokenStatus = NO_TYPE;
@@ -46,6 +39,8 @@ ErrorCode getTokens(const char* fileIn)
 
     return OK; 
 }
+
+
 
 size_t skipSymbols()
 {

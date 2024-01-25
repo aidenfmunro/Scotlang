@@ -1,29 +1,29 @@
-DEF_OP( "dae",               FUNCDEC) // function declaration
-DEF_OP( "wheesht",            RETURN)
-DEF_OP( "aye-aye",            VARDEC) // variable declaration
-DEF_OP( "gie",                ASSIGN) // '='
-DEF_OP( "fit",                OPENRB) // '('
-DEF_OP( "like?",             CLOSERB) // ')'
-DEF_OP( "ya",                 OPENSB) // '{'
-DEF_OP( "gan?",              CLOSESB) // '}'
-DEF_OP( "!",                 ENDLINE) // ';'
-DEF_OP( "FREEDOM",        ENDPROGRAM)
-DEF_OP( ",",                   COMMA)
-DEF_OP( "div",                    EQ) // '=='
-DEF_OP( "wisnae",                NEQ) // '!='
-DEF_OP( "mair",                 MORE) // '>'
-DEF_OP( "sma",                  LESS) // '<'
-DEF_OP( "+",                     ADD)
-DEF_OP( "-",                     SUB)
-DEF_OP( "*",                     MUL)
-DEF_OP( "/",                     DIV)
-DEF_OP( "^",                     POW)
-DEF_OP( "sin",                   SIN)
-DEF_OP( "cos",                   COS)
-DEF_OP( "tg",                     TG)
-DEF_OP( "ctg",                   CTG)
-DEF_OP( "ln",                     LN)   
-DEF_OP( "fa",                     IF)
-DEF_OP( "ran",                 WHILE)
-DEF_OP( "spikin",              PRINT)  
-DEF_OP( "speir",               INPUT)   
+DEF_KEYWORD( "fn",                    FUNCDEC)
+DEF_KEYWORD( "return",                RETURN)
+DEF_KEYWORD( "var",                   VARDEC) 
+DEF_KEYWORD( "=",                     ASSIGN) 
+DEF_KEYWORD( "(",                     OPENRB) 
+DEF_KEYWORD( ")",                     CLOSERB) 
+DEF_KEYWORD( "{",                     OPENSB) 
+DEF_KEYWORD( "}",                     CLOSESB)    
+DEF_KEYWORD( ";",                     ENDLINE)    
+DEF_KEYWORD( "end",                   ENDPROGRAM)
+DEF_KEYWORD( ",",                     COMMA)
+DEF_KEYWORD( "==",                    EQ) 
+DEF_KEYWORD( "!=",                    NEQ) 
+DEF_KEYWORD( ">",                     MORE) 
+DEF_KEYWORD( "<",                     LESS)
+DEF_KEYWORD( "+",                     ADD)
+DEF_KEYWORD( "-",                     SUB)
+DEF_KEYWORD( "*",                     MUL)
+DEF_KEYWORD( "/",                     DIV)
+DEF_KEYWORD( "^",                     POW)
+DEF_KEYWORD( "sin",                   SIN)
+DEF_KEYWORD( "cos",                   COS)
+DEF_KEYWORD( "tg",                    TG)
+DEF_KEYWORD( "ctg",                   CTG)
+DEF_KEYWORD( "ln",                    LN)   
+DEF_KEYWORD( "if",                    IF)
+DEF_KEYWORD( "while",                 WHILE)
+DEF_KEYWORD( "print",                 PRINT)  
+DEF_KEYWORD( "input",                 INPUT)   
