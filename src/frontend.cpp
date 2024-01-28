@@ -34,8 +34,8 @@ Tokens getTokens (const char* fileIn)
 
 bool skipSymbols (Tokens* tkns, char* buffer)
 {
-    AssertSoft(tkns,    0);
-    AssertSoft(buffer,  0);
+    AssertSoft(tkns,    false);
+    AssertSoft(buffer,  false);
 
     if (curSym == '\0')
     {

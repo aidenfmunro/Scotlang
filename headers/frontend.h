@@ -38,7 +38,7 @@ struct Tokens
 
 Tokens getTokens             (const char* fileIn);
 
-bool skipSymbols        (Tokens* tkns, char* buffer);
+bool skipSymbols             (Tokens* tkns, char* buffer);
 
 bool getToken                (Tokens* tkns, char* buffer);
 
