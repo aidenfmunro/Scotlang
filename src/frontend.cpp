@@ -32,16 +32,14 @@ Tokens getTokens (const char* fileIn)
 #define curPtr    (buffer + tkns->curSymPos)
 #define curToken  tkns->token[tkns->curTokenNum]
 
-ErrorCode skipSymbols (Tokens* tkns, char* buffer)
+bool skipSymbols (Tokens* tkns, char* buffer)
 {
-    AssertSoft(tkns,    NULL);
-    AssertSoft(buffer,  NULL);
+    AssertSoft(tkns,    0);
+    AssertSoft(buffer,  0);
 
-    size_t charsSkipped = 0;
-
-    if (*buffer == '\0')
+    if (curSym == '\0')
     {
-        return 0;
+        return false;
     }
 
     while (isspace (curSym) || curSym == '\t' || curSym == '\n' || curSym == '\r')
@@ -60,12 +58,18 @@ ErrorCode skipSymbols (Tokens* tkns, char* buffer)
         tkns->curSymPos++;
     }
 
-    return OK;
+    if (curSym == '\0')
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool getToken (Tokens* tkns, char* buffer)
 {
-    skipSymbols (tkns, buffer);
+    if (! skipSymbols (tkns, buffer))
+        return false;
 
     if (getKeywordToken (tkns, buffer))
         return true;
@@ -81,9 +85,6 @@ bool getToken (Tokens* tkns, char* buffer)
 
 bool getKeywordToken (Tokens* tkns, char* buffer)
 {
-    if (curSym == '\0')
-        return false;
-
     #define DEF_KEYWORD(keyword, name)                              \
                                                                     \
     if (strncmp (keyword, curPtr, sizeof(keyword) - 1) == 0)        \
@@ -123,39 +124,45 @@ bool getConstToken (Tokens* tkns, char* buffer)
     return false;
 }
 
-const int MAX_IDENTIFIER_NAME = 32;
+const int MAX_NAME_LENGTH = 16;
 
 bool getNameToken (Tokens* tkns, char* buffer)
 {
-    SafeCalloc(name, MAX_IDENTIFIER_NAME, char, false);
+    int charsRead = 0;
 
-    sscanf (curPtr, "%[a-zA-Z_0-9]*", name);
+    char* startPtr = curPtr;
 
-    const char* endPtr = strchr (curPtr, ' ');
+    while ('a' <= curSym && curSym <= 'z' ||
+           'A' <= curSym && curSym <= 'Z' )
+    {
+        tkns->curLinePos ++;
 
-    int charsRead = endPtr - curPtr;
+        tkns->curSymPos  ++;
 
-    if (charsRead < 0 || charsRead > MAX_IDENTIFIER_NAME)
+        charsRead        ++;        
+    } 
+
+    if (charsRead > MAX_NAME_LENGTH)
+    {
         return false;
 
-    printf ("-> %d\n", charsRead);
+        printf("the length of the word is too long!");
+    }
 
-    tkns->curLinePos += charsRead;
-
-    tkns->curSymPos  += charsRead; 
+    curToken.length = charsRead;
 
     if (tkns->token[tkns->curTokenNum - 1].elem->data.op == FUNCDEC) // ???
     {
-        createFuncToken (tkns, name);
+        createFuncToken (tkns, startPtr);
 
-        printf("name: %s\n", name);
+        printf("name: %.*s\n", charsRead, startPtr);
 
         return true;
     }
 
-    createVarToken (tkns, name);
+    createVarToken (tkns, startPtr);
 
-    printf("name: %s\n", name);
+    printf("name: %.*s\n", charsRead, startPtr);
 
     return true;
 }
@@ -229,10 +236,10 @@ ErrorCode PrintTokens (Tokens* tkns)
             printf ("OP    = %d\n", tkns->token[i].elem->data.op);
 
         if (tkns->token[i].elem->type == FUNC)
-            printf ("FUNC  = %s\n", tkns->token[i].elem->data.name);
+            printf ("FUNC  = %.*s\n", tkns->token[i].length, tkns->token[i].elem->data.name);
 
         if (tkns->token[i].elem->type == VAR)
-            printf ("VAR   = %s\n", tkns->token[i].elem->data.name);
+            printf ("VAR   = %.*s\n", tkns->token[i].length, tkns->token[i].elem->data.name);
 
         if (tkns->token[i].elem->type == CONST)
             printf ("CONST = %lg\n", tkns->token[i].elem->data.constVal);
