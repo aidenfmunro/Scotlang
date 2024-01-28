@@ -248,6 +248,7 @@ ErrorCode PrintTokens (Tokens* tkns)
     return OK;
 }
 
+
 /*
 
 #define CHECKOPTOKEN(oper) (tokens[curPos]->data.op == oper)
