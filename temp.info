@@ -1,0 +1,205 @@
+
+#define CHECKOPTOKEN(oper) (tokens[curPos]->data.op == oper)
+
+size_t curPos = 0;
+
+Node* GetG()
+{
+    Node* root = GetOp(); 
+    
+    return root;
+}
+
+Node* GetE()
+{
+    Node* firstNode = GetT();
+
+    while (tokens[curPos]->data.op >= EQ && tokens[curPos]->data.op <= SUB)
+    {
+        Operator op = tokens[curPos]->data.op;
+
+        free(tokens[curPos++]);
+
+        Node* secondNode = GetT();
+
+        firstNode = createNode({.op = op}, OP, firstNode, secondNode);
+    }
+
+    return firstNode;
+}
+
+Node* GetIfWhile()
+{
+    if (CHECKOPTOKEN(IF) || CHECKOPTOKEN(WHILE))
+    {
+        Node* opNode = tokens[curPos++];
+
+        if (CHECKOPTOKEN(OPENRB))
+        {
+            free(tokens[curPos++]);
+
+            Node* firstNode = GetE();
+
+            opNode->left = firstNode;
+
+            if (CHECKOPTOKEN(CLOSERB))
+            {
+                // printf("IM HERE!!!\n");
+
+                free(tokens[curPos++]);
+
+                opNode->right = GetOp();
+
+                return opNode;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+Node* GetT()
+{
+    Node* firstNode = GetP();
+
+    while (tokens[curPos]->data.op >= MUL && tokens[curPos]->data.constVal <= POW)
+    {
+        Operator op = tokens[curPos]->data.op;
+
+        free(tokens[curPos++]);
+
+        Node* secondNode = GetP();
+
+        firstNode = createNode({.op = op}, OP, firstNode, secondNode);
+    }
+
+    return firstNode;
+}
+
+Node* GetOp()
+{
+    if (tokens[curPos]->type == OP && (CHECKOPTOKEN(IF) || CHECKOPTOKEN(WHILE)))
+    {
+        return GetIfWhile();
+    }
+    else if (tokens[curPos]->type == VAR)
+    {
+        // printf("bebra\n");        
+
+        return GetA();
+    }
+    else if (CHECKOPTOKEN(OPENSB))
+    {
+        free(tokens[curPos++]);
+
+        Node* firstNode = GetOp();
+
+        // printf("node: %p\n", firstNode);
+
+        Node* secondNode = {};
+
+        Node* root = firstNode;
+
+        while (!CHECKOPTOKEN(CLOSESB))
+        {
+            secondNode = GetOp();
+
+            firstNode->right = secondNode;
+
+            firstNode = secondNode;
+        }
+
+        free(tokens[curPos++]);
+
+        return root;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+Node* GetA()
+{
+    if (tokens[curPos]->type == VAR)
+    {
+        Node* varNode = tokens[curPos++];
+
+        if (CHECKOPTOKEN(ASSIGN))
+        {
+            // printf("in assign if\n");
+
+            Node* assignNode = tokens[curPos++];
+            
+            Node* valueNode  = GetE();
+
+            connectNode(assignNode, varNode, valueNode);
+
+            if (CHECKOPTOKEN(ENDLINE))
+            {
+                // printf("in end if\n");
+
+                Node* endNode = tokens[curPos++];
+    
+                return connectNode(endNode, assignNode, NULL);
+            }
+        }
+    }
+
+    return NULL;
+}
+
+Node* GetName()
+{
+    if (tokens[curPos]->data.op >= SIN)
+    {
+        Operator op = tokens[curPos++]->data.op; // curPos++
+
+        if (tokens[curPos]->data.op == OPENRB)
+        {
+            free(tokens[curPos++]);
+
+            Node* firstNode = GetE();
+
+            firstNode = createNode({.op = op}, OP, NULL, firstNode);
+
+            if (tokens[curPos]->data.op == CLOSERB)
+            {
+                free(tokens[curPos++]);
+
+                return firstNode;
+            }
+        }
+    }
+    
+    return NULL;
+}
+
+Node* GetP()
+{
+    if (tokens[curPos]->type == OP && tokens[curPos]->data.op == OPENRB)
+    {
+        free(tokens[curPos++]);
+
+        Node* firstNode = GetE();
+
+        if (tokens[curPos]->type == OP && tokens[curPos]->data.op == CLOSERB)
+        {
+            free(tokens[curPos++]);
+
+            return firstNode;
+        }
+
+        return NULL;
+    }
+    else if (tokens[curPos]->type == CONST || tokens[curPos]->type == VAR)
+    {
+        curPos++;
+
+        return tokens[curPos - 1];      
+    }
+    else
+    {
+        return GetName();
+    }
+}
