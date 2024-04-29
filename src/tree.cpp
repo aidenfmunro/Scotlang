@@ -19,11 +19,11 @@ struct ParseRes
     NodeElem_t data;
 };
 
-static ErrorCode _dumpTreeDot    (Node* node, FILE* outFile);
+static ErrorCode dumpTreeDot_    (Node* node, FILE* outFile);
 
-static ErrorCode _dumpTreeTxt    (Node* node, FILE* outFile);
+static ErrorCode dumpTreeTxt_    (Node* node, FILE* outFile);
 
-static ErrorCode _checkTreeLinks (Tree* tree, Node* node, size_t* counter);
+static ErrorCode checkTreeLinks_ (Tree* tree, Node* node, size_t* counter);
 
 int countMaxDepth(Node* node)
 {
@@ -47,7 +47,7 @@ int countMaxDepth(Node* node)
     }    
 }
 
-bool findVar(Node* node)
+bool findVar (Node* node)
 {
     if (node == NULL)
     {
@@ -59,7 +59,7 @@ bool findVar(Node* node)
         return true;
     }
 
-    if (findVar(node->left) || findVar(node->right))
+    if (findVar (node->left) || findVar (node->right))
     {
         return true;
     }
@@ -67,15 +67,15 @@ bool findVar(Node* node)
     return false;
 }
 
-ErrorCode deleteNode(Node* node)
+ErrorCode deleteNode (Node* node)
 {
     AssertSoft(node, NULL_PTR);
 
     if (node->left  != NULL)
-        deleteNode(node->left);
+        deleteNode (node->left);
     
     if (node->right != NULL)
-        deleteNode(node->right);
+        deleteNode (node->right);
 
     node->right  = NULL;
     node->left   = NULL;
@@ -86,22 +86,22 @@ ErrorCode deleteNode(Node* node)
     return OK;
 }
 
-ErrorCode DestroyTree(Tree* tree)
+ErrorCode DestroyTree (Tree* tree)
 {
     AssertSoft(tree, NULL_PTR);
 
     deleteNode(tree->root);
 
-    tree->root = NULL; // ?
+    tree->root  = NULL; // ?
 
     tree->error = 0;
 
-    tree->size = 0;
+    tree->size  = 0;
 
     return OK;
 }
 
-static ErrorCode _checkTreeLinks(Tree* tree, Node* node, size_t* counter)
+static ErrorCode checkTreeLinks_(Tree* tree, Node* node, size_t* counter)
 {
     AssertSoft(tree, NULL_PTR);
     
@@ -117,10 +117,10 @@ static ErrorCode _checkTreeLinks(Tree* tree, Node* node, size_t* counter)
     }
 
     if (node->left != NULL)
-        _checkTreeLinks(tree, node->left, counter);
+        checkTreeLinks_(tree, node->left, counter);
     
     if (node->right != NULL)
-        _checkTreeLinks(tree, node->right, counter);
+        checkTreeLinks_(tree, node->right, counter);
 
     return OK;
 }
@@ -166,7 +166,7 @@ Node* createNode(NodeElem_t data, Type type, Node* left, Node* right)
     return newNode;    
 }
 
-Node* copyNode(Node* originalNode)
+Node* copyNode (Node* originalNode)
 {
     AssertSoft(originalNode, NULL);
 
@@ -211,7 +211,7 @@ Node* copyNode(Node* originalNode)
     return newNode;
 }
 
-Node* connectNode(Node* node, Node* leftChild, Node* rightChild)
+Node* connectNode (Node* node, Node* leftChild, Node* rightChild)
 {
     AssertSoft(node, NULL);
 
@@ -228,7 +228,7 @@ Node* connectNode(Node* node, Node* leftChild, Node* rightChild)
     return node;
 }
 
-Node* createConstNode(double value)
+Node* createConstNode (double value)
 {
     NodeElem_t data = {};
 
@@ -237,7 +237,7 @@ Node* createConstNode(double value)
     return createNode(data, CONST, nullptr, nullptr);
 }
 
-Node* createVarNode(char* varName)
+Node* createVarNode (char* varName)
 {
     NodeElem_t data = {};
 
@@ -246,7 +246,7 @@ Node* createVarNode(char* varName)
     return createNode(data, VAR, nullptr, nullptr);
 }
 
-Node* createFuncNode(char* funcName)
+Node* createFuncNode (char* funcName)
 {
     NodeElem_t data = {};
 
@@ -255,7 +255,7 @@ Node* createFuncNode(char* funcName)
     return createNode(data, FUNC, nullptr, nullptr);
 }
 
-Node* createKeywordNode(Keyword op)
+Node* createKeywordNode (Keyword op)
 {
     NodeElem_t data = {};
     
@@ -264,19 +264,20 @@ Node* createKeywordNode(Keyword op)
     return createNode(data, OP, nullptr, nullptr);
 }
 
-ErrorCode VerifyTree(Tree* tree) // TODO: make proper verify 
+ErrorCode VerifyTree (Tree* tree) // TODO: make proper verify 
 {
     size_t count = 0;
-    _checkTreeLinks(tree, tree->root, &count);
+
+    checkTreeLinks_(tree, tree->root, &count);
 
     return OK;
 } 
 
-ErrorCode DumpTreeTxt(Tree* tree, const char* filename)
+ErrorCode DumpTreeTxt (Tree* tree, const char* filename)
 {
     myOpen(filename, "w+", outFile);
 
-    _dumpTreeTxt(tree->root, outFile);
+    dumpTreeTxt_(tree->root, outFile);
 
     myClose(outFile);
 
@@ -285,7 +286,7 @@ ErrorCode DumpTreeTxt(Tree* tree, const char* filename)
 
 #define dumpText(...) fprintf(outFile, __VA_ARGS__);
 
-static ErrorCode _dumpTreeTxt(Node* node, FILE* outFile) // TODO: create tree with txt file
+static ErrorCode dumpTreeTxt_ (Node* node, FILE* outFile) // TODO: create tree with txt file
 {
     AssertSoft(outFile, UNABLE_TO_OPEN_FILE);
 
@@ -298,34 +299,36 @@ static ErrorCode _dumpTreeTxt(Node* node, FILE* outFile) // TODO: create tree wi
 
     dumpText("(");
 
-    _dumpTreeTxt(node->left, outFile);
+    dumpTreeTxt_ (node->left, outFile);
 
-    switch(node->type)
+    switch (node->type)
     {
         case CONST:
         {
-            dumpText("%lg", node->data.constVal);
+            dumpText ("%lg", node->data.constVal);
             break;
         }
 
         case FUNC:
         {
-            dumpText("%s", node->data.name); 
+            dumpText ("%s", node->data.name); 
             break;
         }
 
         case VAR:
         {
-            dumpText("%s", node->data.name);
+            dumpText ("%s", node->data.name);
             break;
         }
 
         default:
-            printf("Unknown type: %d!\n", node->type);
+        {
+            printf ("Unknown type: %d!\n", node->type);
             break;
+        }
     }
  
-    _dumpTreeTxt(node->right, outFile);
+    dumpTreeTxt_ (node->right, outFile);
 
     dumpText(")");
 
@@ -338,7 +341,7 @@ static ErrorCode _dumpTreeTxt(Node* node, FILE* outFile) // TODO: create tree wi
 
 #define dumpGraph(...) fprintf(outFile, __VA_ARGS__);
 
-ErrorCode DumpTreeGraph(Node* node)
+ErrorCode DumpTreeGraph (Node* node)
 {
     AssertSoft(node, NULL_PTR);
 
@@ -361,7 +364,7 @@ ErrorCode DumpTreeGraph(Node* node)
               "  rankdir   = "RANK";\n\n"
               "  label     = "DUMP_NAME";\n");
 
-    _dumpTreeDot(node, outFile);
+    dumpTreeDot_(node, outFile);
 
     dumpGraph("  }");
 
@@ -378,12 +381,12 @@ ErrorCode DumpTreeGraph(Node* node)
     return OK;
 }
 
-static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
+static ErrorCode dumpTreeDot_ (Node*  node, FILE* outFile)
 {
     AssertSoft(outFile, UNABLE_TO_OPEN_FILE);
     AssertSoft(node,    NULL_PTR);
 
-    if (!node)
+    if (! node)
         return OK;
 
     static size_t nodeNum = 0;
@@ -393,13 +396,13 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
     if (node->type == OP)
     {
         dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"coral\"]\n",
-                                                          nodeNum, getKeywordName(node->data.op));
+                                                                             nodeNum, getKeywordName(node->data.op));
     }
 
     if (node->type == CONST)
     {
         dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%lg}\", fillcolor = \"aqua\"]\n",
-                                                                   nodeNum, node->data.constVal);
+                                                                             nodeNum, node->data.constVal);
     }
 
     if (node->type == VAR)
@@ -420,7 +423,7 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
     {
         size_t childNum = nodeNum;
 
-        _dumpTreeDot(node->left, outFile);
+        dumpTreeDot_ (node->left, outFile);
 
         dumpGraph("\"node%zu\" -> \"node%zu\"\n",
                             curNodeNum, childNum);
@@ -430,7 +433,7 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
     {
         size_t childNum = nodeNum;
 
-        _dumpTreeDot(node->right, outFile);
+        dumpTreeDot_ (node->right, outFile);
 
         dumpGraph("\"node%zu\" -> \"node%zu\"\n",
                             curNodeNum, childNum);
@@ -439,7 +442,9 @@ static ErrorCode _dumpTreeDot(Node* node, FILE* outFile)
     return OK;
 }
 
-char* getKeywordName (Keyword op)
+#undef dumpGraph
+
+const char* getKeywordName (Keyword op)
 {
     #define DEF_KEYWORD(keyword, name) case name: return #name;
 
@@ -454,4 +459,3 @@ char* getKeywordName (Keyword op)
     #undef DEF_KEYWORD
 }
 
-#undef dumpGraph

@@ -1,14 +1,18 @@
-#ifndef FRONTEND_H
-#define FRONTEND_H
+#ifndef TOKENIZER_H
+#define TOKENIZER_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
+
 #include "tree.h"
 #include "textfuncs.h"
 #include "string.h"
 #include "utils.h"
+#include "colors.h"
+
+const int MAX_NAME_LENGTH = 16;
 
 struct Token
 {
@@ -32,6 +36,8 @@ struct Tokens
     size_t curLineNum   = 0;
 
     size_t curSymPos    = 0;
+
+    size_t tokenCount   = 0;
 
     Type curTokenStatus = NONE;
 };
@@ -60,23 +66,6 @@ ErrorCode updateToken        (Tokens* tkns, Node* node);
 
 ErrorCode PrintTokens        (Tokens* tkns); 
 
-Node* GetG();
-
-Node* GetE();
-
-Node* GetIfWhile();
-
-Node* GetT();
-
-Node* GetOp();
-
-Node* GetA();
-
-Node* GetName();
-
-Node* GetP();
-
-
-
+ErrorCode PrintToken         (Token* tkn); 
 
 #endif

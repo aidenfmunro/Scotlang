@@ -80,7 +80,7 @@ Node*     createFuncNode    (char* funcName);
 
 Node*     createKeywordNode (Keyword op);
 
-char*     getKeywordName         (Keyword op);
+const char*     getKeywordName         (Keyword op);
 
 int       countMaxDepth     (Node* node);
 

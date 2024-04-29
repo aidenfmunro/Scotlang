@@ -1,15 +1,15 @@
-#define FONT_COLOR "\"#000000\""
+#define FONT_COLOR              "\"#000000\""
 
 #define BACKGROUND_PARENT_COLOR "\"aqua\""
 
-#define BACKGROUND_CHILD_COLOR "\"coral\""
+#define BACKGROUND_CHILD_COLOR  "\"coral\""
 
-#define DUMP_NAME "\"Differentiator Dump\""
+#define DUMP_NAME               "\"Scotlang Dump\""
 
-#define SHAPE "\"Mrecord\""
+#define SHAPE                   "\"Mrecord\""
 
-#define STYLE "\"filled\""
+#define STYLE                   "\"filled\""
 
-#define SPACE_BETWEEN_CONTENTS "\"0.075\""
+#define SPACE_BETWEEN_CONTENTS  "\"0.075\""
 
-#define RANK "\"TB\""
+#define RANK                    "\"TB\""
