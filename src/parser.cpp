@@ -23,7 +23,7 @@ Node* GetGrammar (Tokens* tkns)
 
 Node* GetE (Tokens* tkns)
 {
-    printf("In GetE\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetE...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -32,6 +32,10 @@ Node* GetE (Tokens* tkns)
     while (curNode->data.op >= EQ && curNode->data.op <= SUB)
     {
         Keyword op = curNode->data.op;
+
+        free(curNode);
+
+        curPos++;
 
         Node* secondNode = GetT (tkns); 
 
@@ -43,7 +47,7 @@ Node* GetE (Tokens* tkns)
 
 Node* GetIfWhile (Tokens* tkns)
 {
-    printf("In GetIfWhile\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetIfWhile...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -65,11 +69,9 @@ Node* GetIfWhile (Tokens* tkns)
 
             if (REQUIRE(CLOSE_RB))
             {
-                // printf("IM HERE!!!\n");
-
                 free(curNode);
 
-                curPos++; // TODO: Free and move on, maybe?
+                curPos++; 
 
                 opNode->right = GetOp (tkns);
 
@@ -83,13 +85,13 @@ Node* GetIfWhile (Tokens* tkns)
 
 Node* GetT (Tokens* tkns)
 {
-    printf("In GetT\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetT...\n Current token: ");
 
     PrintToken(&curToken);
 
     Node* firstNode = GetP (tkns);
 
-    while (curNode->data.op >= MUL && curNode->data.constVal <= POW)
+    while (curNode->data.op >= MUL && curNode->data.op <= POW)
     {
         Keyword op = curNode->data.op;
 
@@ -107,7 +109,7 @@ Node* GetT (Tokens* tkns)
 
 Node* GetOp (Tokens* tkns)
 {
-    printf("In GetOp\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetOp...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -117,8 +119,6 @@ Node* GetOp (Tokens* tkns)
     }
     else if (curNode->type == VAR)
     {
-        // printf("bebra\n");        
-
         return GetA (tkns);
     }
     else if (REQUIRE(OPEN_SB))
@@ -158,7 +158,7 @@ Node* GetOp (Tokens* tkns)
 
 Node* GetA (Tokens* tkns)
 {
-    printf("In GetA\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetA...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -198,7 +198,7 @@ Node* GetA (Tokens* tkns)
 
 Node* GetName (Tokens* tkns)
 {
-    printf("In GetName\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetName...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -234,7 +234,7 @@ Node* GetName (Tokens* tkns)
 
 Node* GetP (Tokens* tkns)
 {
-    printf("In GetP\n");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetP...\n Current token: ");
 
     PrintToken(&curToken);
 

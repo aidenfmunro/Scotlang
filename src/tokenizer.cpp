@@ -12,7 +12,7 @@ Tokens getTokens (const char* fileIn)
 
     Tokens tkns = {.token = tkn};
 
-    printf(""BOLD"->"COLOR_RESET" File size: "RED"%d\n"COLOR_RESET"", src.size);
+    printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" File size: %d\n", src.size);
 
     while (src.buffer)
     {
@@ -25,7 +25,7 @@ Tokens getTokens (const char* fileIn)
             break;
     }
 
-    printf(""BOLD"->"COLOR_RESET" Amount of tokens eatten: %d!\n", tkns.curTokenNum);
+    printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" Amount of tokens eatten: %d!\n", tkns.curTokenNum);
 
     tkns.tokenCount = tkns.curTokenNum;
 
@@ -162,7 +162,7 @@ bool getNameToken (Tokens* tkns, char* buffer)
     {
         return false;
 
-        printf("(%s) the length of the word is too long!", startPtr);
+        printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" (%s) the length of the word is too long!", startPtr);
     }
 
     curToken.length = charsRead;
@@ -171,14 +171,14 @@ bool getNameToken (Tokens* tkns, char* buffer)
     {
         createFuncToken (tkns, startPtr);
 
-        printf(""BOLD"->"COLOR_RESET" Name: %.*s\n", charsRead, startPtr);
+        printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" Name: %.*s\n", charsRead, startPtr);
 
         return true;
     }
 
     createVarToken (tkns, startPtr);
 
-    printf(""BOLD"->"COLOR_RESET" Name: %.*s\n", charsRead, startPtr);
+    printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" Name: %.*s\n", charsRead, startPtr);
 
     return true;
 }
@@ -199,9 +199,8 @@ ErrorCode updateToken (Tokens* tkns, Node* node)
 
     tkns->curTokenNum++;
 
-    printf (""BOLD"->"COLOR_RESET" "
-            ""BOLD"Updated token"COLOR_RESET" "
-            "%d! in line: "BOLD"%d"COLOR_RESET","
+    printf (""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" New token "
+            "(#%d)! in line: "BOLD"%d"COLOR_RESET","
             " pos: "BOLD"%d"COLOR_RESET"\n", tkns->curTokenNum, tkns->curLineNum, tkns->curLinePos);
 
     return OK;
@@ -236,7 +235,7 @@ ErrorCode createFuncToken (Tokens* tkns, char* funcName)
     AssertSoft(tkns,     NULL_PTR);
     AssertSoft(funcName, NULL_PTR);
 
-    updateToken (tkns, createFuncNode (funcName));
+    updateToken (tkns, createFuncNode (funcName, tkns->token[tkns->curTokenNum].length));
 
     tkns->curTokenStatus = FUNC;
 
@@ -248,7 +247,7 @@ ErrorCode createVarToken (Tokens* tkns, char* varName)
     AssertSoft(tkns,    NULL_PTR);
     AssertSoft(varName, NULL_PTR);
 
-    updateToken (tkns, createVarNode (varName));
+    updateToken (tkns, createVarNode (varName, tkns->token[tkns->curTokenNum].length));
 
     tkns->curTokenStatus = VAR;
 
@@ -282,16 +281,16 @@ ErrorCode PrintToken (Token* tkn)
     AssertSoft(tkn, NULL_PTR);
 
     if (tkn->elem->type == OP)
-        printf (""BOLD"OP:"COLOR_RESET" %s\n",   getKeywordName(tkn->elem->data.op));
+        printf (""BOLD"OP ->"COLOR_RESET" %s\n",   getKeywordName(tkn->elem->data.op));
 
     if (tkn->elem->type == FUNC)
-        printf (""BOLD"FUNC:"COLOR_RESET" %.*s\n", tkn->length, tkn->elem->data.name);
+        printf (""BOLD"FUNC ->"COLOR_RESET" %.*s\n", tkn->length, tkn->elem->data.name);
 
     if (tkn->elem->type == VAR)
-        printf (""BOLD"VAR:"COLOR_RESET" %.*s\n", tkn->length, tkn->elem->data.name);
+        printf (""BOLD"VAR ->"COLOR_RESET" %.*s\n",  tkn->length, tkn->elem->data.name);
 
     if (tkn->elem->type == CONST)
-        printf (""BOLD"CONST:"COLOR_RESET" %lg\n",  tkn->elem->data.constVal);
+        printf (""BOLD"CONST ->"COLOR_RESET" %lg\n", tkn->elem->data.constVal);
 
     return OK;
 }

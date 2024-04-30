@@ -33,7 +33,7 @@ struct Tokens
 
     size_t curLinePos   = 0;
 
-    size_t curLineNum   = 0;
+    size_t curLineNum   = 1;
 
     size_t curSymPos    = 0;
 

@@ -237,22 +237,30 @@ Node* createConstNode (double value)
     return createNode(data, CONST, nullptr, nullptr);
 }
 
-Node* createVarNode (char* varName)
+Node* createVarNode (char* varName, size_t length)
 {
     NodeElem_t data = {};
 
-    data.name = varName;
+    data.name   = varName;
 
-    return createNode(data, VAR, nullptr, nullptr);
+    Node* node = createNode(data, VAR, nullptr, nullptr); 
+
+    node->length = length;
+
+    return node;   
 }
 
-Node* createFuncNode (char* funcName)
+Node* createFuncNode (char* funcName, size_t length)
 {
     NodeElem_t data = {};
 
-    data.name = funcName;
+    data.name   = funcName;
 
-    return createNode(data, FUNC, nullptr, nullptr);
+    Node* node = createNode(data, FUNC, nullptr, nullptr);
+
+    node->length = length;
+
+    return node;   
 }
 
 Node* createKeywordNode (Keyword op)
@@ -311,13 +319,13 @@ static ErrorCode dumpTreeTxt_ (Node* node, FILE* outFile) // TODO: create tree w
 
         case FUNC:
         {
-            dumpText ("%s", node->data.name); 
+            dumpText ("%*.s", node->length, node->data.name); 
             break;
         }
 
         case VAR:
         {
-            dumpText ("%s", node->data.name);
+            dumpText ("%*.s", node->length, node->data.name);
             break;
         }
 
@@ -407,14 +415,14 @@ static ErrorCode dumpTreeDot_ (Node*  node, FILE* outFile)
 
     if (node->type == VAR)
     {
-        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"aquamarine\"]\n",
-                                                                             nodeNum, node->data.name);
+        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%.*s}\", fillcolor = \"aquamarine\"]\n",
+                                                                             nodeNum, node->length, node->data.name);
     }
 
     if (node->type == FUNC)
     {
-        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"azure\"]\n",
-                                                                             nodeNum, node->data.name);
+        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%.*s}\", fillcolor = \"azure\"]\n",
+                                                                             nodeNum, node->length, node->data.name);
     }
 
     nodeNum++;

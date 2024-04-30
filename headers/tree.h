@@ -38,6 +38,8 @@ struct Node
 {
     NodeElem_t data       = {};
 
+    size_t     length;            // TODO: if you change type and length what be careful!
+
     Type       type       = NONE; // WARNING: CHANGED
 
     Node*      parent;
@@ -74,9 +76,9 @@ Node*     createNode        (NodeElem_t data, Type type, Node* left, Node* right
 
 Node*     createConstNode   (double value);
 
-Node*     createVarNode     (char* varName);
+Node*     createVarNode     (char* varName, size_t length);
 
-Node*     createFuncNode    (char* funcName);
+Node*     createFuncNode    (char* funcName, size_t length);
 
 Node*     createKeywordNode (Keyword op);
 

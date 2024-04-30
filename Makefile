@@ -16,13 +16,10 @@ release : CFLAGS=-Wno-narrowing -Wno-pointer-arith -O3 -std=c++17
 release : $(TARGET)	
 
 $(TARGET) : $(OBJ)
-	$(CC) $(HEADERS) $(CFLAGS) $^ -o $@
+	@$(CC) $(HEADERS) $(CFLAGS) $^ -o $@
 
 $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
-	$(CC) $(HEADERS) $(CFLAGS) -c $^ -o $@
-
-draw:
-	dot -Tpng treegraph.dot -o tree.png
+	@$(CC) $(HEADERS) $(CFLAGS) -c $^ -o $@
 
 dirs:
 	mkdir log log/txt log/dot log/img obj log/pdf log/tex # sys call at the start 
