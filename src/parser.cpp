@@ -8,7 +8,7 @@
 
 #define nextNode tkns->token[tkns->curTokenNum + 1].elem
 
-#define REQUIRE(keyword) (curNode->data.op == keyword)
+#define REQUIRE(keyword) (curNode->data.id == keyword)
 
 #define curPos  tkns->curTokenNum
 
@@ -29,17 +29,17 @@ Node* GetE (Tokens* tkns)
 
     Node* firstNode = GetT (tkns);
 
-    while (EQ <= curNode->data.op <= SUB)
+    while (EQ <= curNode->data.id && curNode->data.id <= SUB)
     {
-        Keyword op = curNode->data.op;
-    я
+        Keyword id = curNode->data.id;
+    
         free(curNode);
 
         curPos++;
 
         Node* secondNode = GetT (tkns); 
 
-        firstNode = createNode({.op = op}, OP, firstNode, secondNode);
+        firstNode = createNode({.id = id}, ID, firstNode, secondNode);
     }
 
     return firstNode;
@@ -53,7 +53,7 @@ Node* GetIfWhile (Tokens* tkns)
 
     if (REQUIRE(IF) || REQUIRE(WHILE))
     {
-        Node* opNode = curNode;
+        Node* idNode = curNode;
 
         curPos++;
 
@@ -65,7 +65,7 @@ Node* GetIfWhile (Tokens* tkns)
 
             Node* firstNode = GetE (tkns);
 
-            opNode->left = firstNode;
+            idNode->left = firstNode;
 
             if (REQUIRE(CLOSE_RB))
             {
@@ -73,9 +73,9 @@ Node* GetIfWhile (Tokens* tkns)
 
                 curPos++; 
 
-                opNode->right = GetOp (tkns);
+                idNode->right = GetOp (tkns);
 
-                return opNode;
+                return idNode;
             }
         }
     }
@@ -91,9 +91,9 @@ Node* GetT (Tokens* tkns)
 
     Node* firstNode = GetP (tkns);
 
-    while (curNode->data.op >= MUL && curNode->data.op <= POW)
+    while (curNode->data.id >= MUL && curNode->data.id <= POW)
     {
-        Keyword op = curNode->data.op;
+        Keyword id = curNode->data.id;
 
         free(curNode);
 
@@ -101,7 +101,7 @@ Node* GetT (Tokens* tkns)
 
         Node* secondNode = GetP (tkns);
 
-        firstNode = createNode({.op = op}, OP, firstNode, secondNode);
+        firstNode = createNode({.id = id}, ID, firstNode, secondNode);
     }
 
     return firstNode;
@@ -113,7 +113,7 @@ Node* GetOp (Tokens* tkns)
 
     PrintToken(&curToken);
 
-    if (curNode->type == OP && (REQUIRE(IF) || REQUIRE(WHILE)))
+    if (curNode->type == ID && (REQUIRE(IF) || REQUIRE(WHILE)))
     {
         return GetIfWhile (tkns);
     }
@@ -202,13 +202,13 @@ Node* GetName (Tokens* tkns)
 
     PrintToken(&curToken);
 
-    if (curNode->data.op >= SIN)
+    if (curNode->data.id >= SIN)
     {
-        Keyword op = curNode->data.op; // curPos++
+        Keyword id = curNode->data.id; // curPos++
 
         curPos++;
 
-        if (curNode->data.op == OPEN_RB)
+        if (curNode->data.id == OPEN_RB)
         {
             free(curNode);
 
@@ -216,9 +216,9 @@ Node* GetName (Tokens* tkns)
 
             Node* firstNode = GetE (tkns);
 
-            firstNode = createNode({.op = op}, OP, NULL, firstNode);
+            firstNode = createNode({.id = id}, ID, NULL, firstNode);
 
-            if (curNode->data.op == CLOSE_RB)
+            if (curNode->data.id == CLOSE_RB)
             {
                 free(curNode);
 
@@ -238,7 +238,7 @@ Node* GetP (Tokens* tkns)
 
     PrintToken(&curToken);
 
-    if (curNode->type == OP && curNode->data.op == OPEN_RB)
+    if (curNode->type == ID && curNode->data.id == OPEN_RB)
     {
         free(curNode);
 
@@ -246,7 +246,7 @@ Node* GetP (Tokens* tkns)
 
         Node* firstNode = GetE (tkns);
 
-        if (curNode->type == OP && curNode->data.op == CLOSE_RB)
+        if (curNode->type == ID && curNode->data.id == CLOSE_RB)
         {
             free(curNode);
 

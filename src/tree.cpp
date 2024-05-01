@@ -145,9 +145,9 @@ Node* createNode(NodeElem_t data, Type type, Node* left, Node* right)
     {
         newNode->data.constVal = data.constVal;
     }
-    else if (type == OP)
+    else if (type == ID)
     {
-        newNode->data.op  = data.op;
+        newNode->data.id  = data.id;
     }
     else if (type == VAR)
     {
@@ -182,9 +182,9 @@ Node* copyNode (Node* originalNode)
             break;
         }
 
-        case OP:
+        case ID:
         {
-            newNode->data.op     = originalNode->data.op;
+            newNode->data.id     = originalNode->data.id;
             break;
         }    
 
@@ -263,13 +263,13 @@ Node* createFuncNode (char* funcName, size_t length)
     return node;   
 }
 
-Node* createKeywordNode (Keyword op)
+Node* createKeywordNode (Keyword id)
 {
     NodeElem_t data = {};
     
-    data.op = op;
+    data.id = id;
 
-    return createNode(data, OP, nullptr, nullptr);
+    return createNode(data, ID, nullptr, nullptr);
 }
 
 ErrorCode VerifyTree (Tree* tree) // TODO: make proper verify 
@@ -366,7 +366,7 @@ ErrorCode DumpTreeGraph (Node* node)
               "  node[ "
               "  shape     = "SHAPE"," 
               "  style     = "STYLE"," 
-              "  fillcolor = "BACKGROUND_PARENT_COLOR"," 
+              "  fillcolor = "BACKGROUND_COLOR"," 
               "  fontcolor = "FONT_COLOR","
               "  margin    = "SPACE_BETWEEN_CONTENTS"];\n"
               "  rankdir   = "RANK";\n\n"
@@ -401,28 +401,36 @@ static ErrorCode dumpTreeDot_ (Node*  node, FILE* outFile)
 
     size_t curNodeNum = nodeNum;
     
-    if (node->type == OP)
+    if (node->type == ID)
     {
-        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%s}\", fillcolor = \"coral\"]\n",
-                                                                             nodeNum, getKeywordName(node->data.op));
+        const char* opName = getKeywordName(node->data.id);
+
+        dumpGraph("\"node%zu\" [shape = "SHAPE","
+                   " label = \"{{<left>name:\\n %.*s | <right>type:\\n ID} | parent\\n%p | <f0> address\\n%p|"
+                  " {<left>left\\n%p | <right>right\\n%p\\n}}\", fillcolor = \"yellow\"]\n",
+                                                                             nodeNum, strlen(opName), opName, node->parent, node, node->left, node->right);
     }
 
     if (node->type == CONST)
     {
-        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%lg}\", fillcolor = \"aqua\"]\n",
-                                                                             nodeNum, node->data.constVal);
+        dumpGraph("\"node%zu\" [shape = "SHAPE","
+                  " label = \"{{<left>val:\\n %lg | <right>type:\\n CONST} | parent\\n%p | <f0> address\\n%p|"
+                  " {<left>left\\n%p | <right>right\\n%p\\n}}\", fillcolor = "BACKGROUND_CONST_COLOR"]\n",
+                                                                             nodeNum, node->data.constVal, node->parent, node, node->left, node->right);
     }
 
     if (node->type == VAR)
     {
-        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%.*s}\", fillcolor = \"aquamarine\"]\n",
-                                                                             nodeNum, node->length, node->data.name);
+        dumpGraph("\"node%zu\" [shape = "SHAPE", label = \"{{<left>name:\\n %.*s | <right>type:\\n VAR} | parent\\n%p | <f0> address\\n%p|"
+                  " {<left>left\\n%p | <right>right\\n%p\\n}}\", fillcolor = "BACKGROUND_VAR_COLOR"]\n",
+                                                                             nodeNum, node->length, node->data.name, node->parent, node, node->left, node->right);
     }
 
     if (node->type == FUNC)
     {
-        dumpGraph("\"node%zu\" [shape = \"record\", label = \"{%.*s}\", fillcolor = \"azure\"]\n",
-                                                                             nodeNum, node->length, node->data.name);
+        dumpGraph("\"node%zu\" [shape = "SHAPE", label = \"{{<left>name:\\n %.*s | <right>type:\\n FUNC} | parent\\n%p | <f0> address\\n%p|"
+                  " {<left>left\\n%p | <right>right\\n%p\\n}}\", fillcolor = "BACKGROUND_FUNC_COLOR"]\n",
+                                                                             nodeNum, node->length, node->data.name, node->parent, node, node->left, node->right);
     }
 
     nodeNum++;
@@ -452,11 +460,11 @@ static ErrorCode dumpTreeDot_ (Node*  node, FILE* outFile)
 
 #undef dumpGraph
 
-const char* getKeywordName (Keyword op)
+const char* getKeywordName (Keyword id)
 {
     #define DEF_KEYWORD(keyword, name) case name: return #name;
 
-    switch (op)
+    switch (id)
     {
         #include "keywords.def"
 

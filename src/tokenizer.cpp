@@ -167,7 +167,7 @@ bool getNameToken (Tokens* tkns, char* buffer)
 
     curToken.length = charsRead;
 
-    if (tkns->token[tkns->curTokenNum - 1].elem->data.op == FUNCDEC) // ???
+    if (tkns->token[tkns->curTokenNum - 1].elem->data.id == FUNCDEC) // ???
     {
         createFuncToken (tkns, startPtr);
 
@@ -208,13 +208,13 @@ ErrorCode updateToken (Tokens* tkns, Node* node)
 
 #undef curToken
 
-ErrorCode createKeywordToken (Tokens* tkns, Keyword op)
+ErrorCode createKeywordToken (Tokens* tkns, Keyword id)
 {
     AssertSoft(tkns, NULL_PTR);
 
-    updateToken (tkns, createKeywordNode (op));
+    updateToken (tkns, createKeywordNode (id));
 
-    tkns->curTokenStatus = OP;
+    tkns->curTokenStatus = ID;
 
     return OK;
 }
@@ -260,8 +260,8 @@ ErrorCode PrintTokens (Tokens* tkns)
 
     for (size_t i = 0; i < tkns->tokenCount; i++) 
     {
-        if (tkns->token[i].elem->type == OP)
-            printf ("OP    = %s\n",   getKeywordName(tkns->token[i].elem->data.op));
+        if (tkns->token[i].elem->type == ID)
+            printf ("ID    = %s\n",   getKeywordName(tkns->token[i].elem->data.id));
 
         if (tkns->token[i].elem->type == FUNC)
             printf ("FUNC  = %.*s\n", tkns->token[i].length, tkns->token[i].elem->data.name);
@@ -280,8 +280,8 @@ ErrorCode PrintToken (Token* tkn)
 {
     AssertSoft(tkn, NULL_PTR);
 
-    if (tkn->elem->type == OP)
-        printf (""BOLD"OP ->"COLOR_RESET" %s\n",   getKeywordName(tkn->elem->data.op));
+    if (tkn->elem->type == ID)
+        printf (""BOLD"ID ->"COLOR_RESET" %s\n",   getKeywordName(tkn->elem->data.id));
 
     if (tkn->elem->type == FUNC)
         printf (""BOLD"FUNC ->"COLOR_RESET" %.*s\n", tkn->length, tkn->elem->data.name);

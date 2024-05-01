@@ -1,8 +1,12 @@
 #define FONT_COLOR              "\"#000000\""
 
-#define BACKGROUND_PARENT_COLOR "\"aqua\""
+#define BACKGROUND_COLOR       "\"white\""
 
-#define BACKGROUND_CHILD_COLOR  "\"coral\""
+#define BACKGROUND_CONST_COLOR "\"aqua\""
+
+#define BACKGROUND_VAR_COLOR    "\"aquamarine\""
+
+#define BACKGROUND_FUNC_COLOR   "\"purple\""
 
 #define DUMP_NAME               "\"Scotlang Dump\""
 

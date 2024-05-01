@@ -54,7 +54,7 @@ bool getConstToken           (Tokens* tkns, char* buffer);
 
 bool getNameToken            (Tokens* tkns, char* buffer);
 
-ErrorCode createKeywordToken (Tokens* tkns, Keyword op);
+ErrorCode createKeywordToken (Tokens* tkns, Keyword id);
 
 ErrorCode createConstToken   (Tokens* tkns, double value);
 

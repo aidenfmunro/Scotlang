@@ -21,7 +21,7 @@ enum Type
     FUNC,
     VAR,
     CONST,
-    OP,
+    ID,
     NONE
 };
 
@@ -29,7 +29,7 @@ union NodeElem_t
 {
     double     constVal;
 
-    Keyword    op;
+    Keyword    id;
 
     char*      name;
 };
@@ -80,9 +80,9 @@ Node*     createVarNode     (char* varName, size_t length);
 
 Node*     createFuncNode    (char* funcName, size_t length);
 
-Node*     createKeywordNode (Keyword op);
+Node*     createKeywordNode (Keyword id);
 
-const char*     getKeywordName         (Keyword op);
+const char*     getKeywordName         (Keyword id);
 
 int       countMaxDepth     (Node* node);
 
