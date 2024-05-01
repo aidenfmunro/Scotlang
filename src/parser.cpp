@@ -29,10 +29,10 @@ Node* GetE (Tokens* tkns)
 
     Node* firstNode = GetT (tkns);
 
-    while (curNode->data.op >= EQ && curNode->data.op <= SUB)
+    while (EQ <= curNode->data.op <= SUB)
     {
         Keyword op = curNode->data.op;
-
+    я
         free(curNode);
 
         curPos++;
