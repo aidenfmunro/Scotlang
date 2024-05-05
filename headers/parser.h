@@ -9,6 +9,12 @@
 
 Node* GetGrammar (Tokens* tkns);
 
+Node* GetAll (Tokens* tkns);
+
+Node* GetFunc (Tokens* tkns);
+
+Node* GetFuncArguments (Tokens* tkns);
+
 Node* GetE       (Tokens* tkns);
 
 Node* GetIfWhile (Tokens* tkns);

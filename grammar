@@ -1,0 +1,143 @@
+getAll
+    : ( getGlobalChunk )*
+    ;
+
+getGlobalChunk
+    : [R]getFunction
+    | [R]getDeclarationStatement
+    ;
+
+getPrimaryExpression "a primary expression"
+    : [R]getNumber
+    | '(' [R]getExpression $ ')'
+    | [l]getIdentifier [CR]'(' [r]getArgumentList $ ')'
+    | [l]getIdentifier [CR]'[' [r]getExpression $ ']'
+    | [R]getIdentifier
+    ;
+
+getArgumentList "an expression list"
+    : [l]getOrExpression [CR]',' $ _ [r]getArgumentList
+    | [R]getOrExpression
+    ;
+
+getPostfixExpression "an expression"
+    : [l]getPrimaryExpression [CR]'++'
+    | [l]getPrimaryExpression [CR]'--'
+    | [R]getPrimaryExpression
+    ;
+
+getUnaryExpression "an expression"
+    : [CR]'++' [r]getPostfixExpression 
+    | [CR]'--' [r]getPostfixExpression
+    | [CR]'+' [r]getUnaryExpression
+    | [CR]'-' [r]getUnaryExpression
+    | [CR]'!' [r]getUnaryExpression
+    | [CR]'sqrt' $ '(' [r]getOrExpression ')'
+    | [R]getPostfixExpression
+    ;
+
+getMultiplicativeExpression "an expression"
+    : [l]getUnaryExpression [CR]'*' $ [r]getMultiplicativeExpression 
+    | [l]getUnaryExpression [CR]'/' $ [r]getMultiplicativeExpression 
+    | [l]getUnaryExpression [CR]'%' $ [r]getMultiplicativeExpression 
+    | [R]getUnaryExpression
+    ;
+
+getAdditiveExpression "an expression"
+    : [l]getMultiplicativeExpression _ [CR]'+' $ _ [r]getAdditiveExpression 
+    | [l]getMultiplicativeExpression _ [CR]'-' $ _ [r]getAdditiveExpression 
+    | [R]getMultiplicativeExpression
+    ;
+
+getRelationalExpression "an expression"
+    : [l]getAdditiveExpression _ [CR]'>'  $ _ [r]getRelationalExpression
+    | [l]getAdditiveExpression _ [CR]'<'  $ _ [r]getRelationalExpression
+    | [l]getAdditiveExpression _ [CR]'>=' $ _ [r]getRelationalExpression
+    | [l]getAdditiveExpression _ [CR]'<=' $ _ [r]getRelationalExpression
+    | [R]getAdditiveExpression
+    ;
+
+getEqualityExpression "an expression"
+    : [l]getRelationalExpression _ [CR]'==' $ _ [r]getEqualityExpression
+    | [l]getRelationalExpression _ [CR]'!=' $ _ [r]getEqualityExpression
+    | [R]getRelationalExpression
+    ;
+
+getAndExpression "an expression"
+    : [l]getEqualityExpression _ [CR]'&&' $ _ [r]getAndExpression
+    | [R]getEqualityExpression
+    ;
+
+getOrExpression "an expression"
+    : [l]getAndExpression _ [CR]'||' $ _ [r]getOrExpression
+    | [R]getAndExpression
+    ;
+
+getExpression "an expression"
+    : [R]getOrExpression
+    ;
+
+getDefinition
+    : [l]getSpecifier _ [R]getIdentifier
+    ;
+
+getDeclarationList
+    : [l]getDefinition [CR]',' _ [r]getDeclarationList
+    | [R]getDefinition
+    ;
+
+getFunctionMaskDefinition
+    : [l]getIdentifier [CR]'(' [r]getDeclarationList ')'
+    : [l]getIdentifier [CR]'(' ')'
+    ;   
+
+getFunction
+    : [CR]getSpecifier _ [l]getFunctionMaskDefinition _ [r]getStatementList
+    ;
+
+getAssign
+    : [r]getIdentifier _ [CR]'=' $ _ [l]getExpression
+    ;
+
+getDeclaration
+    : [R]getSpecifier _ [l]getAssign
+    ;
+
+getStatement "a statement"
+    : [R]getDeclarationStatement
+    | [R]getAssignStatement
+    | [R]getConditionStatement
+    | [R]getReturnStatement
+    | [R]getPrintStatement
+    | [R]getScanStatement
+    ;
+
+getStatementList "a statement"
+    : '{' _ ( getStatement )* $ '}' _ 
+    | $ [R]getStatement
+    ;
+
+getConditionStatement
+    : [CR]<IF>    $ _ '(' [l]getExpression ')' _ [r]getStatementList
+    | [CR]<WHILE> $ _ '(' [l]getExpression ')' _ [r]getStatementList
+    ;
+
+getAssignStatement
+    : [R]getAssign $ ';' _
+    ;
+
+getDeclarationStatement
+    : [R]getDeclaration $ ';' _
+    ;
+
+getReturnStatement
+    : [CR]<RETURN> $ _ [l]getExpression ';' _
+    ;
+
+getPrintStatement
+    : [CR]<PRINT> $ '(' [l]getIdentifier ')' ';' _
+    ;
+
+getScanStatement
+    : [CR]<SCAN> $ '(' [l]getIdentifier ')' ';' _
+    ;

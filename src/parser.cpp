@@ -15,11 +15,104 @@
 
 Node* GetGrammar (Tokens* tkns)
 {
-    Node* root = GetOp (tkns); 
+    Node* root = GetAll (tkns); 
     
     return root;
 }
 
+Node* GetAll (Tokens* tkns)
+{
+    Node* decNode = createKeywordNode(FUNCDEC);
+
+    Node* curFuncNode = GetFunc(tkns);
+
+    Node* curDecNode = decNode;
+
+    while (curFuncNode != NULL)
+    {
+        Node* newDecNode = createKeywordNode(FUNCDEC);
+
+        connectNode(curDecNode, curFuncNode, newDecNode);
+
+        curDecNode = newDecNode;
+
+        curFuncNode = GetFunc(tkns);
+    }
+
+    return decNode;
+}
+
+Node* GetFunc (Tokens* tkns)
+{
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFuncArguments...\n Current token: ");
+
+    PrintToken(&curToken);
+
+    Node* funcNode = NULL;
+
+    if (REQUIRE(FUNCDEC))
+    {
+        free(curNode);
+
+        curPos++;
+
+        funcNode = curNode;
+
+    
+
+        Node* argsNode = GetFuncArguments(tkns);
+
+        Node* blockNode = GetOp(tkns);
+
+        connectNode(funcNode, argsNode, blockNode);
+    }
+
+    return funcNode;
+}
+
+Node* GetFuncArguments (Tokens* tkns)
+{
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFuncArguments...\n Current token: ");
+
+    PrintToken(&curToken);
+
+    Node* argsNode = createKeywordNode(COMMA);
+
+    if (REQUIRE(OPEN_RB))
+    {
+        Node* curArgNode = argsNode;
+
+        free(curNode);
+
+        curPos++;
+
+        while (! REQUIRE(CLOSE_RB))
+        {
+            Node* argNode = curNode;
+
+            curPos++;
+
+            Node* commaNode = curNode;
+
+            if (commaNode->data.id == CLOSE_RB)
+            {
+                break;
+            }
+
+            connectNode(curArgNode, argNode, commaNode);
+
+            curArgNode = commaNode;
+
+            curPos++;
+        }
+
+        free(curNode);
+
+        curPos++;
+    }
+
+    return argsNode;
+}
 
 Node* GetE (Tokens* tkns)
 {
