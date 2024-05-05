@@ -44,7 +44,9 @@ Node* GetAll (Tokens* tkns)
 
 Node* GetFunc (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFuncArguments...\n Current token: ");
+    AssertSoft(curNode, NULL);
+
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFunc...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -58,16 +60,49 @@ Node* GetFunc (Tokens* tkns)
 
         funcNode = curNode;
 
-    
+        curPos++;
 
         Node* argsNode = GetFuncArguments(tkns);
 
-        Node* blockNode = GetOp(tkns);
+        Node* blockNode = GetBlock(tkns);
 
         connectNode(funcNode, argsNode, blockNode);
     }
 
     return funcNode;
+}
+
+Node* GetBlock (Tokens* tkns)
+{
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetBlock...\n Current token: ");
+
+    PrintToken(&curToken);
+
+    Node* blockNode = NULL;
+
+    if (REQUIRE(OPEN_SB))
+    {
+        printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetBlock...\n Function has open brackets... \n");
+
+        free(curNode);
+
+        curPos++;
+
+        blockNode = GetOp(tkns);
+    }
+    else
+    {
+        //
+    }
+
+    if (REQUIRE(CLOSE_SB))
+    {
+        free(curNode);
+
+        curPos++;
+    }
+
+    return blockNode;
 }
 
 Node* GetFuncArguments (Tokens* tkns)

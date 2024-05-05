@@ -13,6 +13,8 @@ Node* GetAll (Tokens* tkns);
 
 Node* GetFunc (Tokens* tkns);
 
+Node* GetBlock (Tokens* tkns);
+
 Node* GetFuncArguments (Tokens* tkns);
 
 Node* GetE       (Tokens* tkns);
