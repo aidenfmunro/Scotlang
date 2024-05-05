@@ -1,4 +1,4 @@
-fn main ()
+fn main (a, b, c)
 {
     if (x + 2 + 3 + 4 - 5 > 1)
     {
@@ -8,4 +8,6 @@ fn main ()
 
         x = 2 + 3;
     }
+
+    ret x;
 }

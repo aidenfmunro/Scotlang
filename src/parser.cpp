@@ -44,7 +44,7 @@ Node* GetAll (Tokens* tkns)
 
 Node* GetFunc (Tokens* tkns)
 {
-    AssertSoft(curNode, NULL);
+    AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
 
     printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFunc...\n Current token: ");
 
@@ -131,6 +131,8 @@ Node* GetFuncArguments (Tokens* tkns)
 
             if (commaNode->data.id == CLOSE_RB)
             {
+                connectNode(curArgNode, argNode, NULL);
+
                 break;
             }
 
