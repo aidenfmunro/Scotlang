@@ -37,6 +37,8 @@ Node* GetInputPrint                (Tokens* tkns);
              
 Node* GetUnaryOperation            (Tokens* tkns);
 
+Node* GetFuncExpression            (Tokens* tkns);
+
 
 
 #endif

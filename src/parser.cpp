@@ -297,6 +297,10 @@ Node* GetOp (Tokens* tkns)
     {
         return GetInputPrint (tkns);
     }
+    else if (curNode->type == FUNC)
+    {
+        return GetFuncExpression (tkns);
+    }
     else if (REQUIRE(OPEN_SB))
     {
         free(curNode);
@@ -410,7 +414,7 @@ Node* GetReturn (Tokens* tkns)
 
             curPos++;
 
-            return connectNode(endNode, connectNode(retNode, retArgNode, NULL), NULL);
+            return connectNode(endNode, connectNode(retNode, NULL, retArgNode), NULL);
         }
     }
 
@@ -524,10 +528,34 @@ Node* GetPrimaryExpression (Tokens* tkns)
 
         return prevNode;      
     }
+    else if (curNode->type == FUNC)
+    {
+        return GetFuncExpression (tkns);
+    }
     else
     {
         return GetUnaryOperation (tkns);
     }
+}
+
+Node* GetFuncExpression (Tokens* tkns)
+{
+    AssertSoft(tkns, NULL);
+
+    PrintCurrentParserState();
+
+    if (curNode->type == FUNC)
+    {
+        Node* funcNode = curNode;
+        
+        curPos++;
+
+        Node* funcArgsNode = GetFuncArguments (tkns);
+
+        return connectNode(funcNode, funcArgsNode, NULL);
+    }
+
+    return NULL;
 }
 
 

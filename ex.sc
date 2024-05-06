@@ -26,5 +26,9 @@ fn count (x, y, z)
 {
     y = sin(5);
 
+    x = main();
+
+    count(1, 2, 3);
+
     ret y;
 }

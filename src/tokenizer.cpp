@@ -25,6 +25,17 @@ Tokens getTokens (const char* fileIn)
             break;
     }
 
+    for (size_t iterator = 0; iterator < tkns.curTokenNum - 1; iterator++) //
+    {                                                                      // change VAR -> FUNC
+        if (tkns.token[iterator].elem->type == VAR)                        //
+        {
+            if (tkns.token[iterator + 1].elem->data.id == OPEN_RB)
+            {
+                tkns.token[iterator].elem->type = FUNC;
+            }
+        }
+    }
+
     printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" Amount of tokens eatten: %d!\n", tkns.curTokenNum);
 
     tkns.tokenCount = tkns.curTokenNum;
