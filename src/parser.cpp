@@ -160,15 +160,15 @@ Node* GetFuncArguments (Tokens* tkns)
     return argsNode;
 }
 
-Node* GetE (Tokens* tkns)
+Node* GetAdditiveExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetE...\n Current token: ");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetAdditiveExpression...\n Current token: ");
 
     PrintToken(&curToken);
 
-    Node* firstNode = GetT (tkns);
+    Node* firstNode = GetMultiplicativeExpression (tkns);
 
-    while (EQ <= curNode->data.id && curNode->data.id <= SUB)
+    while (REQUIRE(ADD) || REQUIRE(SUB))
     {
         Keyword id = curNode->data.id;
     
@@ -176,7 +176,7 @@ Node* GetE (Tokens* tkns)
 
         curPos++;
 
-        Node* secondNode = GetT (tkns); 
+        Node* secondNode = GetMultiplicativeExpression (tkns); 
 
         firstNode = createNode({.id = id}, ID, firstNode, secondNode);
     }
@@ -202,7 +202,7 @@ Node* GetIfWhile (Tokens* tkns)
 
             curPos++;
 
-            Node* firstNode = GetE (tkns);
+            Node* firstNode = GetLogicalExpression (tkns);
 
             idNode->left = firstNode;
 
@@ -224,15 +224,45 @@ Node* GetIfWhile (Tokens* tkns)
     return NULL;
 }
 
-Node* GetT (Tokens* tkns)
+Node* GetLogicalExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetT...\n Current token: ");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetLogicalExpression...\n Current token: ");
 
     PrintToken(&curToken);
 
-    Node* firstNode = GetP (tkns);
+    Node* firstTerm = GetAdditiveExpression(tkns);
 
-    while (curNode->data.id >= MUL && curNode->data.id <= POW)
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetLogicalExpression...\n Current token: ");
+
+    PrintToken(&curToken);
+
+    Node* logicalOpNode = NULL;
+
+    if (REQUIRE(EQ) || REQUIRE(NEQ) || REQUIRE(LESS) || REQUIRE(LESS_OR_EQUAL) || REQUIRE(MORE) || REQUIRE(MORE_OR_EQUAL))
+    {
+        printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetLogicalExpression...\n Current token: ");
+
+        PrintToken(&curToken);
+
+        logicalOpNode = curNode;
+
+        curPos++;
+    }
+
+    Node* secondTerm = GetAdditiveExpression(tkns);
+
+    return connectNode(logicalOpNode, firstTerm, secondTerm);
+}
+
+Node* GetMultiplicativeExpression (Tokens* tkns)
+{
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetMultiplicativeExpression...\n Current token: ");
+
+    PrintToken(&curToken);
+
+    Node* firstNode = GetPrimaryExpression (tkns);
+
+    while (REQUIRE(MUL) || REQUIRE(POW) || REQUIRE(DIV))
     {
         Keyword id = curNode->data.id;
 
@@ -240,7 +270,7 @@ Node* GetT (Tokens* tkns)
 
         curPos++;
 
-        Node* secondNode = GetP (tkns);
+        Node* secondNode = GetPrimaryExpression (tkns);
 
         firstNode = createNode({.id = id}, ID, firstNode, secondNode);
     }
@@ -260,7 +290,7 @@ Node* GetOp (Tokens* tkns)
     }
     else if (curNode->type == VAR)
     {
-        return GetA (tkns);
+        return GetAssign (tkns);
     }
     else if (REQUIRE(OPEN_SB))
     {
@@ -297,9 +327,9 @@ Node* GetOp (Tokens* tkns)
     }
 }
 
-Node* GetA (Tokens* tkns)
+Node* GetAssign (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetA...\n Current token: ");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetAssign...\n Current token: ");
 
     PrintToken(&curToken);
 
@@ -317,7 +347,7 @@ Node* GetA (Tokens* tkns)
 
             curPos++;
             
-            Node* valueNode  = GetE (tkns);
+            Node* valueNode  = GetAdditiveExpression (tkns);
 
             connectNode(assignNode, varNode, valueNode);
 
@@ -337,13 +367,13 @@ Node* GetA (Tokens* tkns)
     return NULL;
 }
 
-Node* GetName (Tokens* tkns)
+Node* GetUnaryOperation (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetName...\n Current token: ");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetUnaryOperation...\n Current token: ");
 
     PrintToken(&curToken);
 
-    if (curNode->data.id >= SIN)
+    if (curNode->data.id >= SIN && curNode->data.id <= LN)
     {
         Keyword id = curNode->data.id; // curPos++
 
@@ -355,7 +385,7 @@ Node* GetName (Tokens* tkns)
 
             curPos++;
 
-            Node* firstNode = GetE (tkns);
+            Node* firstNode = GetAdditiveExpression (tkns);
 
             firstNode = createNode({.id = id}, ID, NULL, firstNode);
 
@@ -373,19 +403,19 @@ Node* GetName (Tokens* tkns)
     return NULL;
 }
 
-Node* GetP (Tokens* tkns)
+Node* GetPrimaryExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetP...\n Current token: ");
+    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetPrimaryExpression...\n Current token: ");
 
     PrintToken(&curToken);
 
-    if (curNode->type == ID && curNode->data.id == OPEN_RB)
+    if (REQUIRE(OPEN_RB))
     {
         free(curNode);
 
         curPos++;
 
-        Node* firstNode = GetE (tkns);
+        Node* firstNode = GetAdditiveExpression (tkns);
 
         if (curNode->type == ID && curNode->data.id == CLOSE_RB)
         {
@@ -406,7 +436,7 @@ Node* GetP (Tokens* tkns)
     }
     else
     {
-        return GetName (tkns);
+        return GetUnaryOperation (tkns);
     }
 }
 

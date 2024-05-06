@@ -15,21 +15,24 @@ Node* GetFunc (Tokens* tkns);
 
 Node* GetBlock (Tokens* tkns);
 
+Node* GetLogicalExpression (Tokens* tkns);
+
+Node* GetAdditiveExpression (Tokens* tkns);
+
+Node* GetMultiplicativeExpression (Tokens* tkns);
+
 Node* GetFuncArguments (Tokens* tkns);
 
-Node* GetE       (Tokens* tkns);
+Node* GetPrimaryExpression (Tokens* tkns);
 
-Node* GetIfWhile (Tokens* tkns);
+Node* GetIfWhile    (Tokens* tkns);
 
-Node* GetT       (Tokens* tkns);
+Node* GetOp         (Tokens* tkns);
+   
+Node* GetAssign          (Tokens* tkns);
+   
+Node* GetUnaryOperation  (Tokens* tkns);
 
-Node* GetOp      (Tokens* tkns);
-
-Node* GetA       (Tokens* tkns);
-
-Node* GetName    (Tokens* tkns);
-
-Node* GetP       (Tokens* tkns);
 
 
 #endif

@@ -1,6 +1,6 @@
 fn main (a, b, c)
 {
-    if (x + 2 + 3 + 4 - 5 > 1)
+    if (x > y)
     {
         y = sin(1);
 
@@ -13,7 +13,9 @@ fn main (a, b, c)
     x = x + 1;
     
     x = x + 1;
+}
 
-    ret x;
-
+fn count (x, y, z)
+{
+    y = sin(5);
 }
