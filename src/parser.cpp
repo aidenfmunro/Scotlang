@@ -293,6 +293,10 @@ Node* GetOp (Tokens* tkns)
     {
         return GetReturn (tkns);
     }
+    else if (curNode->data.id == INPUT || curNode->data.id == PRINT)
+    {
+        return GetInputPrint (tkns);
+    }
     else if (REQUIRE(OPEN_SB))
     {
         free(curNode);
@@ -328,6 +332,58 @@ Node* GetOp (Tokens* tkns)
     }
 }
 
+Node* GetInputPrint (Tokens* tkns)
+{
+    AssertSoft(tkns, NULL);
+
+    PrintCurrentParserState();
+
+    if (REQUIRE(INPUT) || REQUIRE(PRINT))
+    {
+        Node* inputNode = curNode;
+
+        curPos++;
+
+        PrintCurrentParserState();
+
+        if (REQUIRE(OPEN_RB))
+        {
+            free(curNode);
+
+            curPos++;
+
+            PrintCurrentParserState();
+
+            if (curNode->type == VAR)
+            {
+                Node* varNode = curNode;
+
+                curPos++;
+
+                PrintCurrentParserState();
+
+                if (REQUIRE(CLOSE_RB))
+                {
+                    free(curNode);
+
+                    curPos++;
+
+                    if (REQUIRE(ENDLINE))
+                    {
+                        Node* endNode = curNode;
+
+                        curPos++;
+
+                        return connectNode(endNode, connectNode(inputNode, NULL, varNode), NULL);
+                    }
+                }
+            }
+        }
+    }
+
+    return NULL;
+}
+
 Node* GetReturn (Tokens* tkns)
 {
     AssertSoft(tkns, NULL);
@@ -356,7 +412,6 @@ Node* GetReturn (Tokens* tkns)
 
             return connectNode(endNode, connectNode(retNode, retArgNode, NULL), NULL);
         }
-
     }
 
     return NULL;
