@@ -1,6 +1,6 @@
 fn main (a, b, c)
 {
-    if (x > y)
+    if (x + 2 * y - 13 > y - 2 - 3)
     {
         y = sin(1);
 

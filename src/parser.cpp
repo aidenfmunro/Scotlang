@@ -12,6 +12,9 @@
 
 #define curPos  tkns->curTokenNum
 
+#define PrintCurrentParserState() printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In %s...\n Current token: ", __PRETTY_FUNCTION__); \
+                                  PrintToken(&curToken) 
+
 
 Node* GetGrammar (Tokens* tkns)
 {
@@ -46,9 +49,7 @@ Node* GetFunc (Tokens* tkns)
 {
     AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
 
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFunc...\n Current token: ");
-
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* funcNode = NULL;
 
@@ -74,15 +75,15 @@ Node* GetFunc (Tokens* tkns)
 
 Node* GetBlock (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetBlock...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* blockNode = NULL;
 
     if (REQUIRE(OPEN_SB))
     {
-        printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetBlock...\n Function has open brackets... \n");
+        PrintCurrentParserState();
 
         free(curNode);
 
@@ -116,9 +117,9 @@ Node* GetBlock (Tokens* tkns)
 
 Node* GetFuncArguments (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetFuncArguments...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* argsNode = createKeywordNode(COMMA);
 
@@ -162,9 +163,9 @@ Node* GetFuncArguments (Tokens* tkns)
 
 Node* GetAdditiveExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetAdditiveExpression...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* firstNode = GetMultiplicativeExpression (tkns);
 
@@ -186,9 +187,9 @@ Node* GetAdditiveExpression (Tokens* tkns)
 
 Node* GetIfWhile (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetIfWhile...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     if (REQUIRE(IF) || REQUIRE(WHILE))
     {
@@ -226,23 +227,19 @@ Node* GetIfWhile (Tokens* tkns)
 
 Node* GetLogicalExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetLogicalExpression...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* firstTerm = GetAdditiveExpression(tkns);
 
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetLogicalExpression...\n Current token: ");
-
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* logicalOpNode = NULL;
 
     if (REQUIRE(EQ) || REQUIRE(NEQ) || REQUIRE(LESS) || REQUIRE(LESS_OR_EQUAL) || REQUIRE(MORE) || REQUIRE(MORE_OR_EQUAL))
     {
-        printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetLogicalExpression...\n Current token: ");
-
-        PrintToken(&curToken);
+        PrintCurrentParserState();
 
         logicalOpNode = curNode;
 
@@ -256,9 +253,9 @@ Node* GetLogicalExpression (Tokens* tkns)
 
 Node* GetMultiplicativeExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetMultiplicativeExpression...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     Node* firstNode = GetPrimaryExpression (tkns);
 
@@ -280,9 +277,9 @@ Node* GetMultiplicativeExpression (Tokens* tkns)
 
 Node* GetOp (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetOp...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     if (curNode->type == ID && (REQUIRE(IF) || REQUIRE(WHILE)))
     {
@@ -329,9 +326,9 @@ Node* GetOp (Tokens* tkns)
 
 Node* GetAssign (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetAssign...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     if (curNode->type == VAR)
     {
@@ -369,9 +366,9 @@ Node* GetAssign (Tokens* tkns)
 
 Node* GetUnaryOperation (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetUnaryOperation...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     if (curNode->data.id >= SIN && curNode->data.id <= LN)
     {
@@ -405,9 +402,9 @@ Node* GetUnaryOperation (Tokens* tkns)
 
 Node* GetPrimaryExpression (Tokens* tkns)
 {
-    printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In GetPrimaryExpression...\n Current token: ");
+    AssertSoft(tkns, NULL);
 
-    PrintToken(&curToken);
+    PrintCurrentParserState();
 
     if (REQUIRE(OPEN_RB))
     {
@@ -417,7 +414,7 @@ Node* GetPrimaryExpression (Tokens* tkns)
 
         Node* firstNode = GetAdditiveExpression (tkns);
 
-        if (curNode->type == ID && curNode->data.id == CLOSE_RB)
+        if (REQUIRE(CLOSE_RB))
         {
             free(curNode);
 
