@@ -25,11 +25,13 @@ Node* GetFuncArguments (Tokens* tkns);
 
 Node* GetPrimaryExpression (Tokens* tkns);
 
-Node* GetIfWhile    (Tokens* tkns);
+Node* GetIfWhile         (Tokens* tkns);
 
-Node* GetOp         (Tokens* tkns);
+Node* GetOp              (Tokens* tkns);
    
 Node* GetAssign          (Tokens* tkns);
+
+Node* GetReturn          (Tokens* tkns);
    
 Node* GetUnaryOperation  (Tokens* tkns);
 

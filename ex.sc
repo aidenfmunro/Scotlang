@@ -13,6 +13,8 @@ fn main (a, b, c)
     x = x + 1;
     
     x = x + 1;
+
+    ret x + 1;
 }
 
 fn count (x, y, z)

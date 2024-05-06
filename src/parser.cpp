@@ -289,6 +289,10 @@ Node* GetOp (Tokens* tkns)
     {
         return GetAssign (tkns);
     }
+    else if (curNode->data.id == RETURN)
+    {
+        return GetReturn (tkns);
+    }
     else if (REQUIRE(OPEN_SB))
     {
         free(curNode);
@@ -322,6 +326,40 @@ Node* GetOp (Tokens* tkns)
     {
         return NULL;
     }
+}
+
+Node* GetReturn (Tokens* tkns)
+{
+    AssertSoft(tkns, NULL);
+
+    PrintCurrentParserState();
+
+    Node* retNode = NULL;
+
+    if (REQUIRE(RETURN))
+    {
+        PrintCurrentParserState();
+
+        retNode = curNode;
+
+        curPos++;
+
+        Node* retArgNode = GetAdditiveExpression (tkns);
+
+        if (REQUIRE(ENDLINE))
+        {
+            PrintCurrentParserState();
+
+            Node* endNode = curNode;
+
+            curPos++;
+
+            return connectNode(endNode, connectNode(retNode, retArgNode, NULL), NULL);
+        }
+
+    }
+
+    return NULL;
 }
 
 Node* GetAssign (Tokens* tkns)

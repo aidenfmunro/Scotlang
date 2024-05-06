@@ -8,13 +8,15 @@ int main(void)
 
     PrintTokens(&tkns);
 
-    Node* root  = GetGrammar (&tkns);
+    Tree tree = {};
 
-    DumpTreeGraph(root);
+    tree.root  = GetGrammar (&tkns);
+
+    DumpTreeGraph(tree.root);
 
     free(tkns.token);
 
-    deleteNode(root);
+    deleteNode(tree.root);
 
     return 0;
 }
