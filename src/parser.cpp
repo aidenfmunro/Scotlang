@@ -89,6 +89,15 @@ Node* GetBlock (Tokens* tkns)
         curPos++;
 
         blockNode = GetOp(tkns);
+
+        Node* curBlockNode = blockNode;
+
+        while (curBlockNode)
+        {
+            curBlockNode->right = GetOp(tkns);
+
+            curBlockNode = curBlockNode->right;
+        }
     }
     else
     {
@@ -205,7 +214,9 @@ Node* GetIfWhile (Tokens* tkns)
 
                 idNode->right = GetOp (tkns);
 
-                return idNode;
+                Node* endNode = createKeywordNode(ENDLINE);
+
+                return connectNode(endNode, idNode, NULL);
             }
         }
     }
@@ -233,7 +244,7 @@ Node* GetT (Tokens* tkns)
 
         firstNode = createNode({.id = id}, ID, firstNode, secondNode);
     }
-
+    
     return firstNode;
 }
 
@@ -261,7 +272,7 @@ Node* GetOp (Tokens* tkns)
 
         // printf("node: %p\n", firstNode);
 
-        Node* secondNode = {};
+        Node* secondNode = NULL;
 
         Node* root = firstNode;
 

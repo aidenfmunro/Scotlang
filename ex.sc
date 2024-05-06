@@ -9,5 +9,11 @@ fn main (a, b, c)
         x = 2 + 3;
     }
 
+    
+    x = x + 1;
+    
+    x = x + 1;
+
     ret x;
+
 }
