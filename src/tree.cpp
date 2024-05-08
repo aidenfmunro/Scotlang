@@ -403,12 +403,15 @@ static ErrorCode dumpTreeDot_ (Node*  node, FILE* outFile)
     
     if (node->type == ID)
     {
-        const char* opName = getKeywordName(node->data.id);
+        const char* opName  = getKeywordName(node->data.id);
+
+        const char* opColor = getKeywordColor(node->data.id);
 
         dumpGraph("\"node%zu\" [shape = "SHAPE","
                    " label = \"{{<left>name:\\n %.*s | <right>type:\\n ID} | parent\\n%p | <f0> address\\n%p|"
-                  " {<left>left\\n%p | <right>right\\n%p\\n}}\", fillcolor = \"yellow\"]\n",
-                                                                             nodeNum, strlen(opName), opName, node->parent, node, node->left, node->right);
+                  " {<left>left\\n%p | <right>right\\n%p\\n}}\", fillcolor = %s]\n",
+                                                                             nodeNum, strlen(opName), opName, node->parent,
+                                                                             node, node->left, node->right, opColor);
     }
 
     if (node->type == CONST)
@@ -475,3 +478,30 @@ const char* getKeywordName (Keyword id)
     #undef DEF_KEYWORD
 }
 
+const char* getKeywordColor (Keyword id)
+{
+    switch (id)
+    {
+        case IF:
+            return "\"chocolate\"";
+
+        case WHILE:
+            return "\"coral\"";
+
+        case ASSIGN:
+            return "\"lemonchiffon\"";
+
+        case FUNCDEC:
+            return "\"x11maroon\"";
+
+        case COMMA:
+            return "\"whitesmoke\"";
+
+        case ENDLINE:
+            return "\"gray\"";
+
+        default:
+            return "\"yellow\"";
+    
+    }
+}

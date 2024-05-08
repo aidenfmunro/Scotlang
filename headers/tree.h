@@ -82,6 +82,8 @@ Node*     createFuncNode    (char* funcName, size_t length);
 
 Node*     createKeywordNode (Keyword id);
 
+const char*     getKeywordColor        (Keyword id);
+
 const char*     getKeywordName         (Keyword id);
 
 int       countMaxDepth     (Node* node);
