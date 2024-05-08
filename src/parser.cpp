@@ -138,12 +138,16 @@ Node* GetFuncArguments (Tokens* tkns)
             return NULL;
         }
 
+        PrintCurrentParserState();
+
         argsNode = createKeywordNode(COMMA);
 
         Node* curArgNode = argsNode;
 
         while (! REQUIRE(CLOSE_RB))
         {
+            PrintCurrentParserState();
+
             Node* argNode = curNode;
 
             curPos++;
@@ -369,7 +373,7 @@ Node* GetInputPrint (Tokens* tkns)
 
             PrintCurrentParserState();
 
-            if (curNode->type == VAR)
+            if (curNode->type == VAR || curNode->type == CONST)
             {
                 Node* varNode = curNode;
 
@@ -563,7 +567,11 @@ Node* GetFuncExpression (Tokens* tkns)
 
         Node* funcArgsNode = GetFuncArguments (tkns);
 
-        return connectNode(funcNode, funcArgsNode, NULL);
+        Node* endNode = curNode;
+
+        curPos++;
+
+        return connectNode(endNode, NULL, connectNode(funcNode, funcArgsNode, NULL));
     }
 
     return NULL;

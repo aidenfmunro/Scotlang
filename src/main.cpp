@@ -4,7 +4,7 @@
 
 int main(void)
 {
-    Tokens tkns = getTokens("ex.sc");
+    Tokens tkns = getTokens("qequation.sc");
 
     PrintTokens(&tkns);
 

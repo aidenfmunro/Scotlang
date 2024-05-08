@@ -1,6 +1,6 @@
 #include "tokenizer.h"
 
-Tokens getTokens (const char* fileIn)
+Tokens getTokens (Text* text)
 {
     AssertSoft(fileIn, {});
 
