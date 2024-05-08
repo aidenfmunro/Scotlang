@@ -40,5 +40,19 @@ Node* GetUnaryOperation            (Tokens* tkns);
 Node* GetFuncExpression            (Tokens* tkns);
 
 
+#define curNode tkns->token[tkns->curTokenNum].elem
+
+#define curToken tkns->token[tkns->curTokenNum]
+
+#define prevNode tkns->token[tkns->curTokenNum - 1].elem
+
+#define nextNode tkns->token[tkns->curTokenNum + 1].elem
+
+#define REQUIRE(keyword) (curNode->data.id == keyword)
+
+#define curPos  tkns->curTokenNum
+
+#define PrintCurrentParserState() printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In %s...\n Current token: ", __PRETTY_FUNCTION__); \
+                                  PrintToken(&curToken) 
 
 #endif

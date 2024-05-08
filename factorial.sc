@@ -4,7 +4,7 @@ fn main ()
 
     x = factorial(y);
 
-    ret x;
+    ret factorial(y);
 }
 
 fn factorial (a)

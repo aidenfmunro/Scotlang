@@ -1,23 +1,11 @@
 #include "parser.h"
 
-#define curNode tkns->token[tkns->curTokenNum].elem
-
-#define curToken tkns->token[tkns->curTokenNum]
-
-#define prevNode tkns->token[tkns->curTokenNum - 1].elem
-
-#define nextNode tkns->token[tkns->curTokenNum + 1].elem
-
-#define REQUIRE(keyword) (curNode->data.id == keyword)
-
-#define curPos  tkns->curTokenNum
-
-#define PrintCurrentParserState() printf(""BOLD"[PARSER]"COLOR_RESET""RED" =>"COLOR_RESET" In %s...\n Current token: ", __PRETTY_FUNCTION__); \
-                                  PrintToken(&curToken) 
-
-
 Node* GetGrammar (Tokens* tkns)
 {
+    AssertSoft(curPos < tkns->tokenCount, NULL)
+    AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
+
+
     Node* root = GetAll (tkns); 
     
     return root;
@@ -25,6 +13,9 @@ Node* GetGrammar (Tokens* tkns)
 
 Node* GetAll (Tokens* tkns)
 {
+    AssertSoft(curPos < tkns->tokenCount, NULL)
+    AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
+    
     Node* decNode = createKeywordNode(FUNCDEC);
 
     Node* curFuncNode = GetFunc(tkns);
@@ -40,6 +31,14 @@ Node* GetAll (Tokens* tkns)
         curDecNode = newDecNode;
 
         curFuncNode = GetFunc(tkns);
+
+        if (! curFuncNode)
+        {
+            curDecNode->parent->right = NULL; // delete unexisting address
+
+            deleteNode(curDecNode);
+        }
+        
     }
 
     return decNode;
@@ -47,6 +46,8 @@ Node* GetAll (Tokens* tkns)
 
 Node* GetFunc (Tokens* tkns)
 {
+    AssertSoft(curPos < tkns->tokenCount, NULL)
+
     AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
 
     PrintCurrentParserState();
@@ -75,7 +76,8 @@ Node* GetFunc (Tokens* tkns)
 
 Node* GetBlock (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -117,7 +119,8 @@ Node* GetBlock (Tokens* tkns)
 
 Node* GetFuncArguments (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -183,7 +186,8 @@ Node* GetFuncArguments (Tokens* tkns)
 
 Node* GetAdditiveExpression (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -207,7 +211,8 @@ Node* GetAdditiveExpression (Tokens* tkns)
 
 Node* GetIfWhile (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -247,7 +252,8 @@ Node* GetIfWhile (Tokens* tkns)
 
 Node* GetLogicalExpression (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -273,7 +279,8 @@ Node* GetLogicalExpression (Tokens* tkns)
 
 Node* GetMultiplicativeExpression (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -297,7 +304,8 @@ Node* GetMultiplicativeExpression (Tokens* tkns)
 
 Node* GetOp (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -358,7 +366,8 @@ Node* GetOp (Tokens* tkns)
 
 Node* GetInputPrint (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -410,7 +419,8 @@ Node* GetInputPrint (Tokens* tkns)
 
 Node* GetReturn (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -445,7 +455,8 @@ Node* GetReturn (Tokens* tkns)
 
 Node* GetAssign (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -485,7 +496,8 @@ Node* GetAssign (Tokens* tkns)
 
 Node* GetUnaryOperation (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -521,7 +533,8 @@ Node* GetUnaryOperation (Tokens* tkns)
 
 Node* GetPrimaryExpression (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -562,7 +575,8 @@ Node* GetPrimaryExpression (Tokens* tkns)
 
 Node* GetFuncExpression (Tokens* tkns)
 {
-    AssertSoft(tkns, NULL);
+    AssertSoft(curPos < tkns->tokenCount, NULL);
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
