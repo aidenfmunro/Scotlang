@@ -42,7 +42,7 @@ struct Tokens
     Type curTokenStatus = NONE;
 };
 
-Tokens getTokens             (const char* fileIn);
+Tokens getTokens             (Text* src);
 
 bool skipSymbols             (Tokens* tkns, char* buffer);
 

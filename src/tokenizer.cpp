@@ -1,27 +1,23 @@
 #include "tokenizer.h"
 
-Tokens getTokens (Text* text)
+Tokens getTokens (Text* src)
 {
-    AssertSoft(fileIn, {});
+    AssertSoft(src, {});
 
-    Text src = {};
-
-    CreateText (&src, fileIn);
-
-    SafeCalloc(tkn, src.size, Token, {});
+    SafeCalloc(tkn, src->size, Token, {});
 
     Tokens tkns = {.token = tkn};
 
-    printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" File size: %d\n", src.size);
+    printf(""BOLD"[TOKENIZER]"COLOR_RESET""RED" =>"COLOR_RESET" File size: %d\n", src->size);
 
-    while (src.buffer)
+    while (src->buffer)
     {
-        skipSymbols (&tkns, src.buffer);
+        skipSymbols (&tkns, src->buffer);
 
-        if (*src.buffer == '\0')
+        if (*src->buffer == '\0')
             break;
 
-        if ( ! getToken (&tkns, src.buffer) )
+        if ( ! getToken (&tkns, src->buffer) )
             break;
     }
 

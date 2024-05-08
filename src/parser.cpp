@@ -148,14 +148,19 @@ Node* GetFuncArguments (Tokens* tkns)
         {
             PrintCurrentParserState();
 
-            Node* argNode = curNode;
+            Node* argNode = GetAdditiveExpression (tkns);
 
-            curPos++;
+            // curPos++;
+
+            PrintCurrentParserState();
 
             Node* commaNode = curNode;
 
             if (commaNode->data.id == CLOSE_RB)
             {
+
+
+
                 connectNode(curArgNode, argNode, NULL);
 
                 break;
@@ -421,6 +426,8 @@ Node* GetReturn (Tokens* tkns)
 
         Node* retArgNode = GetAdditiveExpression (tkns);
 
+        PrintCurrentParserState();
+
         if (REQUIRE(ENDLINE))
         {
             PrintCurrentParserState();
@@ -565,13 +572,13 @@ Node* GetFuncExpression (Tokens* tkns)
         
         curPos++;
 
+        PrintCurrentParserState();
+
         Node* funcArgsNode = GetFuncArguments (tkns);
 
-        Node* endNode = curNode;
+        PrintCurrentParserState();
 
-        curPos++;
-
-        return connectNode(endNode, NULL, connectNode(funcNode, funcArgsNode, NULL));
+        return connectNode(funcNode, funcArgsNode, NULL);
     }
 
     return NULL;

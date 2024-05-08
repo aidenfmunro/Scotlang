@@ -2,9 +2,13 @@
 #include "tokenizer.h"
 #include "parser.h"
 
-int main(void)
+int main (int argc, char* argv[])
 {
-    Tokens tkns = getTokens("qequation.sc");
+    Text src = {};
+
+    CreateText(&src, "factorial.sc");
+
+    Tokens tkns = getTokens(&src);
 
     PrintTokens(&tkns);
 
@@ -17,6 +21,8 @@ int main(void)
     free(tkns.token);
 
     deleteNode(tree.root);
+
+    DestroyText(&src);
 
     return 0;
 }
