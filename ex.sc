@@ -1,34 +1,69 @@
 fn main ()
 {
-    input(x);
-
-    input(y);
-
-    input(z);
-
-    if (x + 2 * y - 13 > y - 2 - 3)
+    if (a == 0)
     {
-        y = sin (1);
-
-        x = x + x + x * 2 * 3 * 1;
-
-        x = 2 + 3;
+        solveLinearEquation (b, c);
     }
     
-    x = x + 1;
-    
-    x = x + 1;
-
-    ret x + 1;
+    if (a != 0)
+    {
+        solveQuadraticEquation (a, b, c);
+    }
 }
 
-fn count (x, y, z)
+fn solveLinearEquation (a, b, c)
 {
-    y = sin(5);
+    if (b == 0)
+    {
+        if (c != 0)
+        {
+            print (-1);
+        }
 
-    x = main();
+        if (c == 0)
+        {
+            print (1);
 
-    count(1, 2, 3);
+            print (0);
+        }
+    }
 
-    ret y;
+    if (b != 0)
+    {
+        x = - c / b;
+
+        print(x);
+    }
 }
+
+fn solveQuadraticEquation (a, b, c)
+{
+    d = b ^ 2 - 4 * a * c;
+
+    if (d < 0)
+    {
+        print (0);
+    }
+    if (d == 0)
+    {
+        x = - b / (2 * a);
+
+        print(x);
+    }  
+    if (d > 0)
+    {
+        x1 = (- b + sqrt(d)) / (2 * a);
+
+        x2 = (- b - sqrt(d)) / (2 * a);
+
+        print (2);
+
+        print (x1);
+
+        print (x2);
+    }
+}
+
+
+
+

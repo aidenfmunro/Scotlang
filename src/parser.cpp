@@ -121,15 +121,26 @@ Node* GetFuncArguments (Tokens* tkns)
 
     PrintCurrentParserState();
 
-    Node* argsNode = createKeywordNode(COMMA);
+    Node* argsNode = NULL;
 
     if (REQUIRE(OPEN_RB))
-    {
-        Node* curArgNode = argsNode;
-
+    {     
         free(curNode);
 
         curPos++;
+
+        if (REQUIRE(CLOSE_RB))
+        {
+            free (curNode);
+
+            curPos++;
+
+            return NULL;
+        }
+
+        argsNode = createKeywordNode(COMMA);
+
+        Node* curArgNode = argsNode;
 
         while (! REQUIRE(CLOSE_RB))
         {

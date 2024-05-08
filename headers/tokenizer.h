@@ -12,7 +12,7 @@
 #include "utils.h"
 #include "colors.h"
 
-const int MAX_NAME_LENGTH = 16;
+const int MAX_NAME_LENGTH = 64;
 
 struct Token
 {
