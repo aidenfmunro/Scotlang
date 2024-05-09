@@ -7,7 +7,6 @@ DEF_OP( "like?",             CLOSERB) // ')'
 DEF_OP( "ya",                 OPENSB) // '{'
 DEF_OP( "gan?",              CLOSESB) // '}'
 DEF_OP( "!",                 ENDLINE) // ';'
-DEF_OP( "FREEDOM",        ENDPROGRAM)
 DEF_OP( ",",                   COMMA)
 DEF_OP( "div",                    EQ) // '=='
 DEF_OP( "wisnae",                NEQ) // '!='

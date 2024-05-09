@@ -17,7 +17,8 @@ enum Error
     SYNTAX_ERROR,
     UNKNOWN_NAME,
     UNKNOWN_MODE,
-    INDEX_OUT_OF_RANGE
+    INDEX_OUT_OF_RANGE,
+    NONE_EXIST,
 };
 
 #endif

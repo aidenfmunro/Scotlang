@@ -1,10 +1,8 @@
 fn main ()
 {
-    y = 3 - 1;
-
     x = factorial(y);
 
-    ret factorial(y);
+    print(x);
 }
 
 fn factorial (a)
