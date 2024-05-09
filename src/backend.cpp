@@ -77,6 +77,8 @@ ErrorCode Assemble (Backend* be, Node* node)
 
     switch (node->type)
     {
+        case ID:
+        {
         switch (ID)
         {
             case FUNCDEC:
@@ -115,6 +117,7 @@ ErrorCode Assemble (Backend* be, Node* node)
             case SUB:
             case MUL:
             case DIV:
+            case POW:
             case SQRT:
             case SIN:
             case COS:
@@ -128,25 +131,122 @@ ErrorCode Assemble (Backend* be, Node* node)
 
                 ASM_OP   (node->data.id);
             }
+
+            case NEQ:
+            case EQ:
+            case MORE_OR_EQUAL:
+            case LESS_OR_EQUAL:
+            case LESS:
+            case MORE:
+            {
+                assembleLogicalOperation (be, node);
+            }
             
             case ASSIGN:
             {
-                
+                assembleAssign (be, node);
+            }
+
+            case PRINT:
+            {
+            }
+
+            case INPUT:
+            {
+            }
+
+            case RETURN:
+            {
             }
             
+            default:
+
+            // TODO: fix this default!
+        }
         }
 
-        switch (VAR)
+        case VAR:
         {
             assembleVariable (be, node);
         }
         
-        switch (FUNC)
+        case FUNC:
         {
 
         }
+
+        default:
+
+        // TODO: fix this default!
         
     }   
+
+    return OK;
+}
+
+ErrorCode assembleLogicalOperation (Backend* be, Node* node)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    switch (node->data.id)
+    {
+        case NEQ:
+        {
+            ASM ("\tjne L%llu\n", LABEL_NUM);
+        }
+
+        case EQ:
+        {
+            ASM ("\tje L%llu\n",  LABEL_NUM);
+        }
+
+        case MORE:
+        {
+            ASM ("\tja L%llu\n",  LABEL_NUM);
+        }
+
+        case LESS:
+        {
+            ASM ("\tjb L%llu\n",  LABEL_NUM);
+        }
+
+        case MORE_OR_EQUAL:
+        {
+            ASM ("\tjae L%llu\n", LABEL_NUM);
+        }
+
+        case LESS_OR_EQUAL:
+        {
+            ASM ("\tjbe L%llu\n", LABEL_NUM);
+        }
+
+        default:
+        {
+            ASM ("[ERRROR]: unknown logical operation id:%d!\n", node->data.id);
+        }
+    }
+
+    return OK;
+}
+
+
+ErrorCode assembleAssign (Backend* be, Node* node)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    ASSEMBLE (node->right);
+
+    NameTable*          curNameTable = &be->nameTables[be->level];
+
+    NameTableContainer* container    = findNameTableContainer(curNameTable, node->data.name, node->length);
+
+    ASM ("\tpop [rax + %llu] ; %.*s\n assign", curNameTable->size, node->length, node->data.name);
 
     return OK;
 }
@@ -155,24 +255,42 @@ ErrorCode assembleVariable (Backend* be, Node* node)
 {
     AssertSoft(be,                      NULL_PTR);
     AssertSoft(be->outFile,             NULL_PTR);
-    AssertSoft(be->nameTables,          NULL_PTR)
+    AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    NameTable*          curNameTable = &be->nameTables[be->level];
+
+    NameTableContainer* container    = findNameTableContainer(curNameTable, node->data.name, node->length);
+
+    if (! container)
+    {
+        pushToNameTable(curNameTable, node->data.name, node->length);
+    }
+    else
+    {
+        ASM ("\tpush [rax + %llu] ; %.*s\n", curNameTable->size, node->length, node->data.name);
+        ASM ("\n");
+    }
+
+    // TODO: Maybe think on what's need to be added here? IDK (2:00 AM) 
+
+    return OK;
 }
 
 ErrorCode assembleFunctionDeclaration (Backend* be, Node* node)
 { 
     AssertSoft(be,                      NULL_PTR);
     AssertSoft(be->outFile,             NULL_PTR);
-    AssertSoft(be->nameTables,          NULL_PTR)
+    AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
-    ASM ("%.*s:\n", node->data.name, node->length);
+    ASM ("%.*s:\n", node->length, node->data.name);
 
     pushFunctionArgumentsToNameTable(be, node->left);
 
     ASSEMBLE (node->right);
 
-    ASM("\n");
+    ASM ("\n");
 
     return OK;
 }
@@ -181,13 +299,19 @@ ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node)
 {
     AssertSoft(be,                      NULL_PTR);
     AssertSoft(be->outFile,             NULL_PTR);
-    AssertSoft(be->nameTables,          NULL_PTR)
+    AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
     Node* varNode = node->left;
 
     if (varNode)
+    {
+        ASM ("\tpush 0\n");
+        ASM ("\tpush [rax + %llu] ; %.*s\n", be->nameTables[be->level].size, varNode->length, varNode->data.name);
+        ASM ("\n");
+
         pushToNameTable(&be->nameTables[be->level], varNode->data.name, varNode->length);
+    }
 
     if (node->right)
         pushFunctionArgumentsToNameTable(be, node->right);
@@ -199,7 +323,7 @@ ErrorCode assembleWhile (Backend* be, Node* node)
 {
     AssertSoft(be,                      NULL_PTR);
     AssertSoft(be->outFile,             NULL_PTR);
-    AssertSoft(be->nameTables,          NULL_PTR)
+    AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
     AssertSoft(node,                    NULL_PTR);
 
@@ -224,7 +348,7 @@ ErrorCode assembleIf (Backend* be, Node* node)
 {
     AssertSoft(be,                      NULL_PTR);
     AssertSoft(be->outFile,             NULL_PTR);
-    AssertSoft(be->nameTables,          NULL_PTR)
+    AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
     AssertSoft(node,                    NULL_PTR)
 
@@ -260,7 +384,7 @@ ErrorCode pushToNameTable (NameTable* nameTable, char* name, size_t nameLength)
 NameTableContainer* findNameTableContainer (NameTable* nameTable, char* name, size_t nameLength)
 {
     AssertSoft(nameTable,                             NULL);
-    AssertSoft(nameTable->size < nameTable->capacity, NULL)
+    AssertSoft(nameTable->size < nameTable->capacity, NULL);
     AssertSoft(name,                                  NULL);
 
     for (size_t iterator = 0; iterator < nameTable->size; iterator++)

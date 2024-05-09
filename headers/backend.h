@@ -57,8 +57,6 @@ struct NameTable
     size_t              size;
 
     size_t              capacity;
-
-    size_t              hash;
 };
 
 struct Backend
@@ -77,5 +75,35 @@ struct Backend
 };
 
 //
+
+ErrorCode BackendCreate                    (Backend* be);
+               
+ErrorCode BackendDestroy                   (Backend* be);
+               
+ErrorCode Assemble                         (Backend* be, Node* node);
+
+ErrorCode assembleLogicalOperation         (Backend* be, Node* node);
+
+ErrorCode assembleAssign                   (Backend* be, Node* node);
+     
+ErrorCode assembleVariable                 (Backend* be, Node* node);
+     
+ErrorCode assembleFunctionDeclaration      (Backend* be, Node* node);
+
+ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node);
+
+ErrorCode assembleWhile                    (Backend* be, Node* node);
+
+ErrorCode assembleIf                       (Backend* be, Node* node);
+
+ErrorCode pushToNameTable                  (NameTable* nameTable, char* name, size_t nameLength);
+
+NameTableContainer* findNameTableContainer (NameTable* nameTable, char* name, size_t nameLength)
+
+
+
+
+
+
 
 #endif

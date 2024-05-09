@@ -3,63 +3,75 @@
   rankdir   = "TB";
 
   label     = "Scotlang Dump";
-"node0" [shape = "Mrecord", label = "{{<left>name:\n FUNCDEC | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000b10| {<left>left\n0x604000000050 | <right>right\n0x604000000b90\n}}", fillcolor = "x11maroon"]
-"node1" [shape = "Mrecord", label = "{{<left>name:\n main | <right>type:\n FUNC} | parent\n0x604000000b10 | <f0> address\n0x604000000050| {<left>left\n(nil) | <right>right\n0x6040000002d0\n}}", fillcolor = "purple"]
-"node2" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n0x604000000050 | <f0> address\n0x6040000002d0| {<left>left\n0x604000000190 | <right>right\n0x604000000410\n}}", fillcolor = "gray"]
-"node3" [shape = "Mrecord", label = "{{<left>name:\n ASSIGN | <right>type:\n ID} | parent\n0x6040000002d0 | <f0> address\n0x604000000190| {<left>left\n0x604000000150 | <right>right\n0x6040000001d0\n}}", fillcolor = "lemonchiffon"]
-"node4" [shape = "Mrecord", label = "{{<left>name:\n x | <right>type:\n VAR} | parent\n0x604000000190 | <f0> address\n0x604000000150| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node0" [shape = "Mrecord", label = "{{<left>name:\n FUNCDEC | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000c90| {<left>left\n0x604000000050 | <right>right\n0x604000000d10\n}}", fillcolor = "x11maroon"]
+"node1" [shape = "Mrecord", label = "{{<left>name:\n main | <right>type:\n FUNC} | parent\n0x604000000c90 | <f0> address\n0x604000000050| {<left>left\n(nil) | <right>right\n0x604000000210\n}}", fillcolor = "purple"]
+"node2" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n0x604000000050 | <f0> address\n0x604000000210| {<left>left\n0x604000000190 | <right>right\n0x6040000003d0\n}}", fillcolor = "gray"]
+"node3" [shape = "Mrecord", label = "{{<left>name:\n ASSIGN | <right>type:\n ID} | parent\n0x604000000210 | <f0> address\n0x604000000190| {<left>left\n0x604000000150 | <right>right\n0x6040000001d0\n}}", fillcolor = "lemonchiffon"]
+"node4" [shape = "Mrecord", label = "{{<left>name:\n y | <right>type:\n VAR} | parent\n0x604000000190 | <f0> address\n0x604000000150| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
 "node3" -> "node4"
-"node5" [shape = "Mrecord", label = "{{<left>name:\n factorial | <right>type:\n FUNC} | parent\n0x604000000190 | <f0> address\n0x6040000001d0| {<left>left\n0x604000000b50 | <right>right\n(nil)\n}}", fillcolor = "purple"]
-"node6" [shape = "Mrecord", label = "{{<left>name:\n COMMA | <right>type:\n ID} | parent\n0x6040000001d0 | <f0> address\n0x604000000b50| {<left>left\n0x604000000250 | <right>right\n(nil)\n}}", fillcolor = "whitesmoke"]
-"node7" [shape = "Mrecord", label = "{{<left>name:\n y | <right>type:\n VAR} | parent\n0x604000000b50 | <f0> address\n0x604000000250| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
-"node6" -> "node7"
-"node5" -> "node6"
+"node5" [shape = "Mrecord", label = "{{<left>val:\n 10 | <right>type:\n CONST} | parent\n0x604000000190 | <f0> address\n0x6040000001d0| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aqua"]
 "node3" -> "node5"
 "node2" -> "node3"
-"node8" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000410| {<left>left\n0x604000000310 | <right>right\n(nil)\n}}", fillcolor = "gray"]
-"node9" [shape = "Mrecord", label = "{{<left>name:\n PRINT | <right>type:\n ID} | parent\n0x604000000410 | <f0> address\n0x604000000310| {<left>left\n(nil) | <right>right\n0x604000000390\n}}", fillcolor = "yellow"]
-"node10" [shape = "Mrecord", label = "{{<left>name:\n x | <right>type:\n VAR} | parent\n0x604000000310 | <f0> address\n0x604000000390| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node6" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x6040000003d0| {<left>left\n0x604000000290 | <right>right\n0x604000000510\n}}", fillcolor = "gray"]
+"node7" [shape = "Mrecord", label = "{{<left>name:\n ASSIGN | <right>type:\n ID} | parent\n0x6040000003d0 | <f0> address\n0x604000000290| {<left>left\n0x604000000250 | <right>right\n0x6040000002d0\n}}", fillcolor = "lemonchiffon"]
+"node8" [shape = "Mrecord", label = "{{<left>name:\n x | <right>type:\n VAR} | parent\n0x604000000290 | <f0> address\n0x604000000250| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node7" -> "node8"
+"node9" [shape = "Mrecord", label = "{{<left>name:\n factorial | <right>type:\n FUNC} | parent\n0x604000000290 | <f0> address\n0x6040000002d0| {<left>left\n0x604000000cd0 | <right>right\n(nil)\n}}", fillcolor = "purple"]
+"node10" [shape = "Mrecord", label = "{{<left>name:\n COMMA | <right>type:\n ID} | parent\n0x6040000002d0 | <f0> address\n0x604000000cd0| {<left>left\n0x604000000350 | <right>right\n(nil)\n}}", fillcolor = "whitesmoke"]
+"node11" [shape = "Mrecord", label = "{{<left>name:\n y | <right>type:\n VAR} | parent\n0x604000000cd0 | <f0> address\n0x604000000350| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node10" -> "node11"
 "node9" -> "node10"
-"node8" -> "node9"
-"node2" -> "node8"
-"node1" -> "node2"
-"node0" -> "node1"
-"node11" [shape = "Mrecord", label = "{{<left>name:\n FUNCDEC | <right>type:\n ID} | parent\n0x604000000b10 | <f0> address\n0x604000000b90| {<left>left\n0x6040000004d0 | <right>right\n(nil)\n}}", fillcolor = "x11maroon"]
-"node12" [shape = "Mrecord", label = "{{<left>name:\n factorial | <right>type:\n FUNC} | parent\n0x604000000b90 | <f0> address\n0x6040000004d0| {<left>left\n0x604000000bd0 | <right>right\n0x604000000c10\n}}", fillcolor = "purple"]
-"node13" [shape = "Mrecord", label = "{{<left>name:\n COMMA | <right>type:\n ID} | parent\n0x6040000004d0 | <f0> address\n0x604000000bd0| {<left>left\n0x604000000550 | <right>right\n(nil)\n}}", fillcolor = "whitesmoke"]
-"node14" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x604000000bd0 | <f0> address\n0x604000000550| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node7" -> "node9"
+"node6" -> "node7"
+"node12" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000510| {<left>left\n0x604000000410 | <right>right\n(nil)\n}}", fillcolor = "gray"]
+"node13" [shape = "Mrecord", label = "{{<left>name:\n PRINT | <right>type:\n ID} | parent\n0x604000000510 | <f0> address\n0x604000000410| {<left>left\n(nil) | <right>right\n0x604000000490\n}}", fillcolor = "yellow"]
+"node14" [shape = "Mrecord", label = "{{<left>name:\n x | <right>type:\n VAR} | parent\n0x604000000410 | <f0> address\n0x604000000490| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
 "node13" -> "node14"
 "node12" -> "node13"
-"node15" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n0x6040000004d0 | <f0> address\n0x604000000c10| {<left>left\n0x604000000610 | <right>right\n0x604000000a90\n}}", fillcolor = "gray"]
-"node16" [shape = "Mrecord", label = "{{<left>name:\n IF | <right>type:\n ID} | parent\n0x604000000c10 | <f0> address\n0x604000000610| {<left>left\n0x6040000006d0 | <right>right\n0x604000000850\n}}", fillcolor = "chocolate"]
-"node17" [shape = "Mrecord", label = "{{<left>name:\n EQ | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x6040000006d0| {<left>left\n0x604000000690 | <right>right\n0x604000000710\n}}", fillcolor = "yellow"]
-"node18" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x6040000006d0 | <f0> address\n0x604000000690| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node6" -> "node12"
+"node2" -> "node6"
+"node1" -> "node2"
+"node0" -> "node1"
+"node15" [shape = "Mrecord", label = "{{<left>name:\n FUNCDEC | <right>type:\n ID} | parent\n0x604000000c90 | <f0> address\n0x604000000d10| {<left>left\n0x6040000005d0 | <right>right\n(nil)\n}}", fillcolor = "x11maroon"]
+"node16" [shape = "Mrecord", label = "{{<left>name:\n factorial | <right>type:\n FUNC} | parent\n0x604000000d10 | <f0> address\n0x6040000005d0| {<left>left\n0x604000000d50 | <right>right\n0x604000000d90\n}}", fillcolor = "purple"]
+"node17" [shape = "Mrecord", label = "{{<left>name:\n COMMA | <right>type:\n ID} | parent\n0x6040000005d0 | <f0> address\n0x604000000d50| {<left>left\n0x604000000650 | <right>right\n(nil)\n}}", fillcolor = "whitesmoke"]
+"node18" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x604000000d50 | <f0> address\n0x604000000650| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
 "node17" -> "node18"
-"node19" [shape = "Mrecord", label = "{{<left>val:\n 0 | <right>type:\n CONST} | parent\n0x6040000006d0 | <f0> address\n0x604000000710| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aqua"]
-"node17" -> "node19"
 "node16" -> "node17"
-"node20" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000850| {<left>left\n0x6040000007d0 | <right>right\n(nil)\n}}", fillcolor = "gray"]
-"node21" [shape = "Mrecord", label = "{{<left>name:\n RETURN | <right>type:\n ID} | parent\n0x604000000850 | <f0> address\n0x6040000007d0| {<left>left\n(nil) | <right>right\n0x604000000810\n}}", fillcolor = "yellow"]
-"node22" [shape = "Mrecord", label = "{{<left>val:\n 1 | <right>type:\n CONST} | parent\n0x6040000007d0 | <f0> address\n0x604000000810| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aqua"]
+"node19" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n0x6040000005d0 | <f0> address\n0x604000000d90| {<left>left\n0x604000000710 | <right>right\n0x604000000c10\n}}", fillcolor = "gray"]
+"node20" [shape = "Mrecord", label = "{{<left>name:\n IF | <right>type:\n ID} | parent\n0x604000000d90 | <f0> address\n0x604000000710| {<left>left\n0x6040000007d0 | <right>right\n0x604000000950\n}}", fillcolor = "chocolate"]
+"node21" [shape = "Mrecord", label = "{{<left>name:\n EQ | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x6040000007d0| {<left>left\n0x604000000790 | <right>right\n0x604000000810\n}}", fillcolor = "yellow"]
+"node22" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x6040000007d0 | <f0> address\n0x604000000790| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
 "node21" -> "node22"
+"node23" [shape = "Mrecord", label = "{{<left>val:\n 0 | <right>type:\n CONST} | parent\n0x6040000007d0 | <f0> address\n0x604000000810| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aqua"]
+"node21" -> "node23"
 "node20" -> "node21"
-"node16" -> "node20"
-"node15" -> "node16"
-"node23" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000a90| {<left>left\n0x6040000008d0 | <right>right\n(nil)\n}}", fillcolor = "gray"]
-"node24" [shape = "Mrecord", label = "{{<left>name:\n RETURN | <right>type:\n ID} | parent\n0x604000000a90 | <f0> address\n0x6040000008d0| {<left>left\n(nil) | <right>right\n0x604000000c90\n}}", fillcolor = "yellow"]
-"node25" [shape = "Mrecord", label = "{{<left>name:\n MUL | <right>type:\n ID} | parent\n0x6040000008d0 | <f0> address\n0x604000000c90| {<left>left\n0x604000000910 | <right>right\n0x604000000990\n}}", fillcolor = "yellow"]
-"node26" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x604000000c90 | <f0> address\n0x604000000910| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node24" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000950| {<left>left\n0x6040000008d0 | <right>right\n(nil)\n}}", fillcolor = "gray"]
+"node25" [shape = "Mrecord", label = "{{<left>name:\n RETURN | <right>type:\n ID} | parent\n0x604000000950 | <f0> address\n0x6040000008d0| {<left>left\n(nil) | <right>right\n0x604000000910\n}}", fillcolor = "yellow"]
+"node26" [shape = "Mrecord", label = "{{<left>val:\n 1 | <right>type:\n CONST} | parent\n0x6040000008d0 | <f0> address\n0x604000000910| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aqua"]
 "node25" -> "node26"
-"node27" [shape = "Mrecord", label = "{{<left>name:\n factorial | <right>type:\n FUNC} | parent\n0x604000000c90 | <f0> address\n0x604000000990| {<left>left\n0x604000000c50 | <right>right\n(nil)\n}}", fillcolor = "purple"]
-"node28" [shape = "Mrecord", label = "{{<left>name:\n COMMA | <right>type:\n ID} | parent\n0x604000000990 | <f0> address\n0x604000000c50| {<left>left\n0x604000000a10 | <right>right\n(nil)\n}}", fillcolor = "whitesmoke"]
-"node29" [shape = "Mrecord", label = "{{<left>name:\n y | <right>type:\n VAR} | parent\n0x604000000c50 | <f0> address\n0x604000000a10| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node24" -> "node25"
+"node20" -> "node24"
+"node19" -> "node20"
+"node27" [shape = "Mrecord", label = "{{<left>name:\n ENDLINE | <right>type:\n ID} | parent\n(nil) | <f0> address\n0x604000000c10| {<left>left\n0x6040000009d0 | <right>right\n(nil)\n}}", fillcolor = "gray"]
+"node28" [shape = "Mrecord", label = "{{<left>name:\n RETURN | <right>type:\n ID} | parent\n0x604000000c10 | <f0> address\n0x6040000009d0| {<left>left\n(nil) | <right>right\n0x604000000e50\n}}", fillcolor = "yellow"]
+"node29" [shape = "Mrecord", label = "{{<left>name:\n MUL | <right>type:\n ID} | parent\n0x6040000009d0 | <f0> address\n0x604000000e50| {<left>left\n0x604000000a10 | <right>right\n0x604000000a90\n}}", fillcolor = "yellow"]
+"node30" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x604000000e50 | <f0> address\n0x604000000a10| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node29" -> "node30"
+"node31" [shape = "Mrecord", label = "{{<left>name:\n factorial | <right>type:\n FUNC} | parent\n0x604000000e50 | <f0> address\n0x604000000a90| {<left>left\n0x604000000dd0 | <right>right\n(nil)\n}}", fillcolor = "purple"]
+"node32" [shape = "Mrecord", label = "{{<left>name:\n COMMA | <right>type:\n ID} | parent\n0x604000000a90 | <f0> address\n0x604000000dd0| {<left>left\n0x604000000e10 | <right>right\n(nil)\n}}", fillcolor = "whitesmoke"]
+"node33" [shape = "Mrecord", label = "{{<left>name:\n SUB | <right>type:\n ID} | parent\n0x604000000dd0 | <f0> address\n0x604000000e10| {<left>left\n0x604000000b10 | <right>right\n0x604000000b90\n}}", fillcolor = "yellow"]
+"node34" [shape = "Mrecord", label = "{{<left>name:\n a | <right>type:\n VAR} | parent\n0x604000000e10 | <f0> address\n0x604000000b10| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aquamarine"]
+"node33" -> "node34"
+"node35" [shape = "Mrecord", label = "{{<left>val:\n 1 | <right>type:\n CONST} | parent\n0x604000000e10 | <f0> address\n0x604000000b90| {<left>left\n(nil) | <right>right\n(nil)\n}}", fillcolor = "aqua"]
+"node33" -> "node35"
+"node32" -> "node33"
+"node31" -> "node32"
+"node29" -> "node31"
 "node28" -> "node29"
 "node27" -> "node28"
-"node25" -> "node27"
-"node24" -> "node25"
-"node23" -> "node24"
-"node15" -> "node23"
-"node12" -> "node15"
-"node11" -> "node12"
-"node0" -> "node11"
+"node19" -> "node27"
+"node16" -> "node19"
+"node15" -> "node16"
+"node0" -> "node15"
   }
