@@ -10,11 +10,11 @@
 
 //
 
-size_t NUMBER_OF_CONTAINERS = 32;
+size_t NUMBER_OF_CONTAINERS = 32;   // amount of variables
 
-size_t NUMBER_OF_NAMETABLES = 32;
+size_t NUMBER_OF_NAMETABLES = 8;    // scope levels
 
-size_t RAM_START_NUMBER     = 1000;
+size_t RAM_START_NUMBER     = 1000; // RAM starting point 
 
 //
 
@@ -24,12 +24,16 @@ enum MemoryType
     RAM = 1
 };
 
+//
+
 union MemoryAddress
 {
     unsigned char regId;
 
     size_t        ramAddress;
 };
+
+//
 
 struct NameTableContainer
 {
@@ -46,11 +50,15 @@ struct NameTable
 {
     NameTableContainer* container;
 
-    size_t size;
+    char*               name;
 
-    size_t capacity;
+    size_t              length;
 
-    size_t hash;
+    size_t              size;
+
+    size_t              capacity;
+
+    size_t              hash;
 };
 
 struct Backend
@@ -63,6 +71,11 @@ struct Backend
 
     size_t capacity;
 
+    size_t curNameTable;
+
+    size_t level = 0;
 };
+
+//
 
 #endif
