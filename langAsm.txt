@@ -1,0 +1,41 @@
+main:
+[ERROR]: unknown node type:2!
+	pop [rax + 0] ; y assign
+	push [rax + 0] ; push var y
+	push rax ; stack frame prologue
+	push 1
+	add
+	pop rax
+
+	call          
+
+	push rax ; stack frame epilogue
+;	push 1
+	sub
+	pop rax
+	pop [rax + 1] ; x assign
+
+factorial:
+	pop [rax + 2] ; a
+
+	je L0
+[ERROR]: unknown node type:2!
+	ret
+L0:   ; end if
+	push [rax + 3] ; a
+
+	push [rax + 0] ; push var 
+	push rax ; stack frame prologue
+	push 3
+	add
+	pop rax
+
+	call          
+
+	push rax ; stack frame epilogue
+;	push 3
+	sub
+	pop rax
+	MUL
+	ret
+

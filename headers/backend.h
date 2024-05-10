@@ -8,15 +8,6 @@
 #include "tree.h"
 #include "utils.h"
 
-//
-
-size_t NUMBER_OF_CONTAINERS = 32;   // amount of variables
-
-size_t NUMBER_OF_NAMETABLES = 8;    // scope levels
-
-size_t RAM_START_NUMBER     = 1000; // RAM starting point 
-
-//
 
 enum MemoryType
 {
@@ -82,6 +73,12 @@ ErrorCode BackendDestroy                   (Backend* be);
                
 ErrorCode Assemble                         (Backend* be, Node* node);
 
+ErrorCode assembleConst                    (be, node);
+
+ErrorCode assembleOperation                (Backend* be, Node* node);
+
+ErrorCode assembleReturn                   (Backend* be, Node* node);
+
 ErrorCode assembleFunctionCall             (Backend* be, Node* node);
 
 ErrorCode stackFramePrologue               (Backend* be, NameTable* nameTable);
@@ -98,13 +95,15 @@ ErrorCode assembleFunctionDeclaration      (Backend* be, Node* node);
 
 ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node);
 
+ErrorCode pushFunctionCallArguments        (Backend* be, Node* node);
+
 ErrorCode assembleWhile                    (Backend* be, Node* node);
 
 ErrorCode assembleIf                       (Backend* be, Node* node);
 
 ErrorCode pushToNameTable                  (NameTable* nameTable, char* name, size_t nameLength);
 
-NameTableContainer* findNameTableContainer (NameTable* nameTable, char* name, size_t nameLength)
+NameTableContainer* findNameTableContainer (NameTable* nameTable, char* name, size_t nameLength);
 
 
 
