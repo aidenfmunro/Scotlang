@@ -139,12 +139,12 @@ ErrorCode Assemble (Backend* be, Node* node)
             case LESS:
             case MORE:
             {
-                assembleLogicalOperation (be, node);
+                return assembleLogicalOperation (be, node);
             }
             
             case ASSIGN:
             {
-                assembleAssign (be, node);
+                return assembleAssign (be, node);
             }
 
             case PRINT:
@@ -160,8 +160,12 @@ ErrorCode Assemble (Backend* be, Node* node)
             }
             
             default:
+            {
+                ASM ("[ERROR]: unkown node id:%d!\n", node->data.id);
 
-            // TODO: fix this default!
+                return INCORRECT_ID;
+            }
+
         }
         }
 
@@ -176,10 +180,57 @@ ErrorCode Assemble (Backend* be, Node* node)
         }
 
         default:
+        {
+            ASM ("[ERROR]: unknown node type:%d!\n", node->type);
 
-        // TODO: fix this default!
-        
+            return INCORRECT_TYPE;
+        }
     }   
+
+    return OK;
+}
+
+ErrorCode assembleFunctionCall (Backend* be, Node* node)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    // push rax
+    // push 2
+    // add
+    // pop rax
+
+
+
+    return OK;
+}
+
+ErrorCode pushFunctionCallArguments (Backend* be, Node* node)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    Node* varNode = node->left;
+
+    NameTable* curNameTable = &be->nameTables[be->level];
+
+    if (varNode)
+    {
+        NameTableContainer* container = findNameTableContainer(curNameTable, varNode->data.name, varNode->length);
+
+        if (! container)
+        {
+            ASM ("[ERROR]: variable (%s) isn't declared!\n", varNode->data.name);
+
+            return NO_VARIABLE_IN_NAMETABLE;            
+        }
+
+        ASM ()
+    }
 
     return OK;
 }
@@ -225,7 +276,7 @@ ErrorCode assembleLogicalOperation (Backend* be, Node* node)
 
         default:
         {
-            ASM ("[ERRROR]: unknown logical operation id:%d!\n", node->data.id);
+            ASM ("[ERROR]: unknown logical operation id:%d!\n", node->data.id);
         }
     }
 
@@ -307,7 +358,7 @@ ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node)
     if (varNode)
     {
         ASM ("\tpush 0\n");
-        ASM ("\tpush [rax + %llu] ; %.*s\n", be->nameTables[be->level].size, varNode->length, varNode->data.name);
+        ASM ("\tpop [rax + %llu] ; %.*s\n", be->nameTables[be->level].size, varNode->length, varNode->data.name);
         ASM ("\n");
 
         pushToNameTable(&be->nameTables[be->level], varNode->data.name, varNode->length);
@@ -373,7 +424,7 @@ ErrorCode pushToNameTable (NameTable* nameTable, char* name, size_t nameLength)
 
     container->name            = name;
     container->nameLength      = nameLength;
-    container->addr.ramAddress = RAM_SLOT_COUNTER;
+    container->addr.ramAddress = nameTable->size;
     container->type            = RAM; 
 
     nameTable->size++;
