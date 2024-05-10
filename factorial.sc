@@ -3,6 +3,8 @@ fn main ()
     y = 10;
 
     x = factorial(y);
+
+    ret;
 }
 
 fn factorial (a)

@@ -19,6 +19,8 @@ main:
 
 	pop [rax + 1] ; x assign
 
+	hlt
+
 factorial:
 	pop [rax + 0] ; a
 
@@ -28,6 +30,7 @@ factorial:
 	je L0
 	push 1
 	ret
+
 L0:   ; end if
 	push [rax + 1] ; a
 
@@ -49,4 +52,5 @@ L0:   ; end if
 
 	MUL
 	ret
+
 

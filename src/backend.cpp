@@ -4,21 +4,21 @@ size_t NUMBER_OF_CONTAINERS = 32;   // amount of variables
 
 size_t NUMBER_OF_NAMETABLES = 8;    // scope levels
 
-size_t RAM_START_NUMBER     = 1000; // RAM starting point 
-
 //
 
 size_t LABEL_NUM = 0;
 
 //
 
-static size_t RAM_SLOT_COUNTER = RAM_START_NUMBER;
-
 #define LABEL(LABEL_COUNT, COMMENT) fprintf(be->outFile, "L%llu:   ; %s\n", LABEL_COUNT, COMMENT)
 
 #define WRITE_ASM(...) fprintf(be->outFile, __VA_ARGS__)
 
 #define ASSEMBLE(node) Assemble (be, node)
+
+ErrorCode RunBackend ()
+{
+}
 
 ErrorCode BackendCreate (Backend* be)
 {
@@ -61,12 +61,12 @@ ErrorCode BackendDestroy (Backend* be)
 
     for (size_t iterator = 0; iterator < NUMBER_OF_NAMETABLES; iterator++)
     {
-        NameTable* curNameTable = &be->nameTables[iterator];
+        NameTableContainer* curContainer = be->nameTables[iterator].container;
 
-        free (curNameTable);
+        free (curContainer);
     }
 
-    // free (be->nameTables);
+    free (be->nameTables);
 
     return OK;
 }
@@ -260,9 +260,17 @@ ErrorCode assembleReturn (Backend* be, Node* node)
     AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
-    ASSEMBLE (node->right);
 
-    WRITE_ASM ("\tret\n");    
+    if (node->right)
+    {
+        ASSEMBLE (node->right);
+
+        WRITE_ASM ("\tret\n\n");
+    }
+    else
+    {
+        WRITE_ASM ("\n\thlt\n");
+    }    
 
     return OK;
 }
