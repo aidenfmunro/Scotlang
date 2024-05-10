@@ -176,7 +176,7 @@ ErrorCode Assemble (Backend* be, Node* node)
         
         case FUNC:
         {
-
+            assembleFunctionCall (be, node);
         }
 
         default:
@@ -197,12 +197,41 @@ ErrorCode assembleFunctionCall (Backend* be, Node* node)
     AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
-    // push rax
-    // push 2
-    // add
-    // pop rax
+    NameTable* curNameTable = &be->nameTables[be->level];
 
+    pushFunctionCallArguments (be, node);
 
+    stackFramePrologue (be, curNameTable);
+    
+    ASM ("\n");
+    ASM ("\tcall %*.s\n", node->length, node->data.name);
+    ASM ("\n");
+
+    stackFrameEpilogue (be, curNameTable);
+
+    return OK;
+}
+
+ErrorCode stackFramePrologue (Backend* be, NameTable* nameTable)
+{
+    AssertSoft (nameTable, NULL_PTR);
+
+    ASM ("\tpush rax ; stack frame prologue\n");
+    ASM ("\tpush %llu\n", nameTable->size);
+    ASM ("\tadd\n");
+    ASM ("\tpop rax\n");
+
+    return OK;
+}
+
+ErrorCode stackFrameEpilogue (Backend* be, NameTable* nameTable)
+{
+    AssertSoft (nameTable, NULL_PTR);
+
+    ASM ("\tpush rax ; stack frame epilogue\n;");
+    ASM ("\tpush %llu\n", nameTable->size);
+    ASM ("\tsub\n");
+    ASM ("\tpop rax\n");
 
     return OK;
 }
@@ -224,12 +253,17 @@ ErrorCode pushFunctionCallArguments (Backend* be, Node* node)
 
         if (! container)
         {
-            ASM ("[ERROR]: variable (%s) isn't declared!\n", varNode->data.name);
+            ASM ("[ERROR]: variable (%*.s) isn't declared!\n", varNode->length, varNode->data.name);
 
             return NO_VARIABLE_IN_NAMETABLE;            
         }
 
-        ASM ()
+        ASM ("\tpush [rax + %llu] ; push var %*.s\n", container->addr.ramAddress, varNode->length, varNode->data.name);
+    }
+
+    if (node->right)
+    {
+       pushFunctionCallArguments (be, node); // TODO: add return to functions??? 
     }
 
     return OK;
@@ -357,7 +391,8 @@ ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node)
 
     if (varNode)
     {
-        ASM ("\tpush 0\n");
+        // function arguments are held in the stack
+
         ASM ("\tpop [rax + %llu] ; %.*s\n", be->nameTables[be->level].size, varNode->length, varNode->data.name);
         ASM ("\n");
 

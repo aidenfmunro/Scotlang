@@ -82,6 +82,12 @@ ErrorCode BackendDestroy                   (Backend* be);
                
 ErrorCode Assemble                         (Backend* be, Node* node);
 
+ErrorCode assembleFunctionCall             (Backend* be, Node* node);
+
+ErrorCode stackFramePrologue               (Backend* be, NameTable* nameTable);
+
+ErrorCode stackFrameEpilogue               (Backend* be, NameTable* nameTable);
+
 ErrorCode assembleLogicalOperation         (Backend* be, Node* node);
 
 ErrorCode assembleAssign                   (Backend* be, Node* node);
