@@ -103,7 +103,15 @@ ErrorCode assembleIf                       (Backend* be, Node* node);
 
 ErrorCode pushToNameTable                  (NameTable* nameTable, char* name, size_t nameLength);
 
-NameTableContainer* findNameTableContainer (NameTable* nameTable, char* name, size_t nameLength);
+ErrorCode resetNameTables                  (Backend* be);
+
+ErrorCode resetNameTable                   (NameTable* nameTable);
+
+ErrorCode downgradeNameTable               (Backend* be);
+
+ErrorCode upgradeNameTable                 (Backend* be);
+
+NameTableContainer* findNameTableContainer (Backend* be, char* name, size_t nameLength);
 
 
 
