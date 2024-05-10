@@ -336,19 +336,8 @@ ErrorCode pushFunctionCallArguments (Backend* be, Node* node)
 
     NameTable* curNameTable = &be->nameTables[be->level];
 
-    if (varNode)
-    {
-        NameTableContainer* container = findNameTableContainer(be, varNode->data.name, varNode->length);
-
-        if (! container)
-        {
-            WRITE_ASM ("[ERROR]: variable (%.*s) isn't declared!\n", varNode->length, varNode->data.name);
-
-            return NO_VARIABLE_IN_NAMETABLE;            
-        }
-
-        WRITE_ASM ("\tpush [rax + %llu] ; push var %.*s\n", container->addr.ramAddress, varNode->length, varNode->data.name);
-    }
+    if (node->left)
+        ASSEMBLE (node->left);
 
     if (node->right)
     {
