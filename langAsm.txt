@@ -1,5 +1,5 @@
 main:
-[ERROR]: unknown node type:2!
+	push 10
 	pop [rax + 0] ; y assign
 	push [rax + 0] ; push var y
 	push rax ; stack frame prologue
@@ -7,10 +7,10 @@ main:
 	add
 	pop rax
 
-	call          
+	call factorial
 
 	push rax ; stack frame epilogue
-;	push 1
+	push 1
 	sub
 	pop rax
 	pop [rax + 1] ; x assign
@@ -18,8 +18,9 @@ main:
 factorial:
 	pop [rax + 2] ; a
 
+	push 0
 	je L0
-[ERROR]: unknown node type:2!
+	push 1
 	ret
 L0:   ; end if
 	push [rax + 3] ; a
@@ -30,10 +31,10 @@ L0:   ; end if
 	add
 	pop rax
 
-	call          
+	call factorial
 
 	push rax ; stack frame epilogue
-;	push 3
+	push 3
 	sub
 	pop rax
 	MUL

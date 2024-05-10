@@ -1,0 +1,3 @@
+1. clear nametables after new functions declarations.
+
+2. dtor nametables after scope change

@@ -68,7 +68,9 @@ ErrorCode BackendDestroy (Backend* be)
         free (curNameTable);
     }
 
-    free (be->nameTables);
+    // free (be->nameTables);
+
+    return OK;
 }
 
 ErrorCode Assemble (Backend* be, Node* node)
@@ -201,6 +203,7 @@ ErrorCode assembleConst (Backend* be, Node* node)
     AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
+    ASM ("\tpush %lg\n", node->data.constVal);
 
     return OK;
 }
@@ -278,7 +281,7 @@ ErrorCode assembleFunctionCall (Backend* be, Node* node)
     stackFramePrologue (be, curNameTable);
     
     ASM ("\n");
-    ASM ("\tcall %*.s\n", node->length, node->data.name);
+    ASM ("\tcall %.*s\n", node->length, node->data.name);
     ASM ("\n");
 
     stackFrameEpilogue (be, curNameTable);
@@ -302,7 +305,7 @@ ErrorCode stackFrameEpilogue (Backend* be, NameTable* nameTable)
 {
     AssertSoft (nameTable, NULL_PTR);
 
-    ASM ("\tpush rax ; stack frame epilogue\n;");
+    ASM ("\tpush rax ; stack frame epilogue\n");
     ASM ("\tpush %llu\n", nameTable->size);
     ASM ("\tsub\n");
     ASM ("\tpop rax\n");
@@ -350,10 +353,15 @@ ErrorCode assembleLogicalOperation (Backend* be, Node* node)
     AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
+    ASSEMBLE (node->left);
+
+    ASSEMBLE (node->right);
+
     switch (node->data.id)
     {
         case NEQ:
         {
+
             ASM ("\tjne L%llu\n", LABEL_NUM);
 
             return OK;

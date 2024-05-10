@@ -73,7 +73,7 @@ ErrorCode BackendDestroy                   (Backend* be);
                
 ErrorCode Assemble                         (Backend* be, Node* node);
 
-ErrorCode assembleConst                    (be, node);
+ErrorCode assembleConst                    (Backend* be, Node* node);
 
 ErrorCode assembleOperation                (Backend* be, Node* node);
 
