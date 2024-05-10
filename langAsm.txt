@@ -1,7 +1,10 @@
 main:
-	push 10
+	push 0
 	pop [rax + 0] ; y assign
-	push [rax + 1] ; y
+	in
+	pop [rax + 0] ; input var y
+
+	push [rax + 0] ; y
 
 
 	push rax ; stack frame prologue
@@ -19,6 +22,9 @@ main:
 	pop rax
 
 	pop [rax + 1] ; x assign
+	push [rax + 1] ; x
+
+	out
 
 	hlt
 
@@ -33,9 +39,9 @@ factorial:
 	ret
 
 L0:   ; end if
-	push [rax + 1] ; a
+	push [rax + 0] ; a
 
-	push [rax + 1] ; a
+	push [rax + 0] ; a
 
 	push 1
 	SUB

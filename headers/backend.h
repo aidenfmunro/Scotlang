@@ -79,6 +79,10 @@ ErrorCode assembleOperation                (Backend* be, Node* node);
 
 ErrorCode assembleReturn                   (Backend* be, Node* node);
 
+ErrorCode assemblePrint                    (Backend* be, Node* node);
+
+ErrorCode assembleInput                    (Backend* be, Node* node);
+
 ErrorCode assembleFunctionCall             (Backend* be, Node* node);
 
 ErrorCode stackFramePrologue               (Backend* be, NameTable* nameTable);

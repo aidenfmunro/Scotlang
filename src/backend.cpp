@@ -149,10 +149,12 @@ ErrorCode Assemble (Backend* be, Node* node)
 
             case PRINT:
             {
+                return assemblePrint (be, node);
             }
 
             case INPUT:
             {
+                return assembleInput (be, node);
             }
 
             case RETURN:
@@ -192,6 +194,45 @@ ErrorCode Assemble (Backend* be, Node* node)
             return INCORRECT_TYPE;
         }
     }   
+
+    return OK;
+}
+
+ErrorCode assemblePrint (Backend* be, Node* node)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    ASSEMBLE (node->right);
+
+    WRITE_ASM ("\tout\n");
+
+    return OK;
+}
+
+ErrorCode assembleInput (Backend* be, Node* node)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    WRITE_ASM ("\tin\n");
+
+    Node* varNode = node->right;
+
+    NameTableContainer* container = findNameTableContainer(be, varNode->data.name, varNode->length);
+
+    if (! container)
+    {
+        WRITE_ASM ("[ERROR]: variable (%.*s) isn't declared!\n", varNode->length, varNode->data.name);
+
+        return NO_VARIABLE_IN_NAMETABLE;
+    }
+
+    WRITE_ASM ("\tpop [rax + %llu] ; input var %.*s\n\n", container->addr.ramAddress, container->nameLength, container->name);
 
     return OK;
 }
@@ -460,7 +501,7 @@ ErrorCode assembleVariable (Backend* be, Node* node)
     }
     else
     {
-        WRITE_ASM ("\tpush [rax + %llu] ; %.*s\n", curNameTable->size, node->length, node->data.name);
+        WRITE_ASM ("\tpush [rax + %llu] ; %.*s\n", container->addr.ramAddress, container->nameLength, container->name);
         WRITE_ASM ("\n");
     }
 

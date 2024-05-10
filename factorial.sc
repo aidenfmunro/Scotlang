@@ -1,8 +1,12 @@
 fn main ()
 {
-    y = 10;
+    y = 0;
+
+    input (y);
 
     x = factorial(y);
+
+    print(x);
 
     ret;
 }
