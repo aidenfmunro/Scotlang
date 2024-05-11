@@ -110,12 +110,17 @@ L4:   ; end if
 	je L5
 	push [rax + 1] ; c
 
+	push [rax + 1] ; c
+
+	SUB
+	push [rax + 1] ; c
+
+	SUB
 	push [rax + 0] ; b
 
 	DIV
-	SUB
-	pop [rax + 0] ; x assign
-	push [rax + 0] ; x
+	pop [rax + 2] ; x assign
+	push [rax + 2] ; x
 
 	out
 L5:   ; end if
@@ -171,8 +176,8 @@ L6:   ; end if
 
 	MUL
 	DIV
-	pop [rax + 0] ; x assign
-	push [rax + 0] ; x
+	pop [rax + 4] ; x assign
+	push [rax + 4] ; x
 
 	out
 L7:   ; end if
@@ -188,14 +193,14 @@ L7:   ; end if
 	push [rax + 1] ; b
 
 	SUB
-	pop [rax + 0] ; bm assign
+	pop [rax + 4] ; bm assign
 	push [rax + 3] ; d
 
 	SQRT
-	pop [rax + 1] ; ds assign
-	push [rax + 0] ; bm
+	pop [rax + 5] ; ds assign
+	push [rax + 4] ; bm
 
-	push [rax + 1] ; ds
+	push [rax + 5] ; ds
 
 	ADD
 	push 2
@@ -203,10 +208,10 @@ L7:   ; end if
 
 	MUL
 	DIV
-	pop [rax + 2] ; x assign
-	push [rax + 0] ; bm
+	pop [rax + 6] ; x assign
+	push [rax + 4] ; bm
 
-	push [rax + 1] ; ds
+	push [rax + 5] ; ds
 
 	SUB
 	push 2
@@ -214,11 +219,11 @@ L7:   ; end if
 
 	MUL
 	DIV
-	pop [rax + 3] ; y assign
-	push [rax + 2] ; x
+	pop [rax + 7] ; y assign
+	push [rax + 6] ; x
 
 	out
-	push [rax + 3] ; y
+	push [rax + 7] ; y
 
 	out
 L8:   ; end if

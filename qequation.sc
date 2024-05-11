@@ -46,7 +46,7 @@ fn lineareq (b, c)
 
     if (b != 0)
     {
-        x = - c / b;
+        x = (c - c - c) / b;
 
         print(x);
     }

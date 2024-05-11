@@ -536,7 +536,7 @@ ErrorCode assembleAssign (Backend* be, Node* node)
 
     if (! container)
     {
-        pushToNameTable (curNameTable, lVar, lVarLength);
+        pushToNameTable (be, curNameTable, lVar, lVarLength);
 
         container = findNameTableContainer(be, lVar, lVarLength);        
     }
@@ -559,7 +559,7 @@ ErrorCode assembleVariable (Backend* be, Node* node)
 
     if (! container)
     {
-        pushToNameTable(curNameTable, node->data.name, node->length);
+        pushToNameTable(be, curNameTable, node->data.name, node->length);
     }
     else
     {
@@ -607,7 +607,7 @@ ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node)
         WRITE_ASM ("\tpop [rax + %llu] ; %.*s\n", be->nameTables[be->level].size, varNode->length, varNode->data.name);
         WRITE_ASM ("\n");
 
-        pushToNameTable(&be->nameTables[be->level], varNode->data.name, varNode->length);
+        pushToNameTable(be, &be->nameTables[be->level], varNode->data.name, varNode->length);
     }
 
     if (node->right)
@@ -668,7 +668,7 @@ ErrorCode assembleIf (Backend* be, Node* node)
     return OK;
 }
 
-ErrorCode pushToNameTable (NameTable* nameTable, char* name, size_t nameLength)
+ErrorCode pushToNameTable (Backend* be, NameTable* nameTable, char* name, size_t nameLength)
 {
     AssertSoft(nameTable,                             NULL_PTR);
     AssertSoft(nameTable->size < nameTable->capacity, INDEX_OUT_OF_RANGE);
@@ -678,7 +678,7 @@ ErrorCode pushToNameTable (NameTable* nameTable, char* name, size_t nameLength)
 
     container->name            = name;
     container->nameLength      = nameLength;
-    container->addr.ramAddress = nameTable->size;
+    container->addr.ramAddress = sumNameTableSizes (be);
     container->type            = RAM; 
 
     nameTable->size++;

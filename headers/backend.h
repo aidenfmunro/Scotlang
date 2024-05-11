@@ -110,7 +110,7 @@ ErrorCode assembleWhile                    (Backend* be, Node* node);
 
 ErrorCode assembleIf                       (Backend* be, Node* node);
 
-ErrorCode pushToNameTable                  (NameTable* nameTable, char* name, size_t nameLength);
+ErrorCode pushToNameTable                  (Backend* be, NameTable* nameTable, char* name, size_t nameLength);
 
 ErrorCode resetNameTables                  (Backend* be);
 
