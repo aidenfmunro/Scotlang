@@ -99,7 +99,7 @@ ErrorCode Assemble (Backend* be, Node* node)
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
     if (! node)
-        return NULL;
+        return OK;
 
     switch (node->type)
     {
@@ -417,7 +417,7 @@ ErrorCode pushFunctionCallArguments (Backend* be, Node* node)
 
     if (node->right)
     {
-       pushFunctionCallArguments (be, node); // TODO: add return to functions??? 
+       return pushFunctionCallArguments (be, node->right); // TODO: add return to functions??? 
     }
 
     return OK;

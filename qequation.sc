@@ -1,14 +1,30 @@
 fn main ()
 {
+    a = 0;
+
+    b = 0;
+
+    c = 0;
+
+    input(a);
+
+    input(b);
+
+    input(c);
+
+    x = 0;
+
     if (a == 0)
     {
-        solveLinearEquation (b, c);
+        x = solveLinearEquation (b, c);
     }
     
     if (a != 0)
     {
-        solveQuadraticEquation (a, b, c);
+        x = solveQuadraticEquation (a, b, c);
     }
+
+    ret;
 }
 
 fn solveLinearEquation (a, b, c)
@@ -34,6 +50,8 @@ fn solveLinearEquation (a, b, c)
 
         print(x);
     }
+
+    ret 1;
 }
 
 fn solveQuadraticEquation (a, b, c)
@@ -62,4 +80,6 @@ fn solveQuadraticEquation (a, b, c)
 
         print (y);
     }
+
+    ret 1;
 }
