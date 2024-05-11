@@ -526,8 +526,6 @@ ErrorCode assembleAssign (Backend* be, Node* node)
 
     ASSEMBLE (node->right);
 
-    NameTable*          curNameTable = &be->nameTables[be->level];
-
     char* lVar        = node->left->data.name;
 
     size_t lVarLength = node->left->length;
@@ -536,7 +534,7 @@ ErrorCode assembleAssign (Backend* be, Node* node)
 
     if (! container)
     {
-        pushToNameTable (be, curNameTable, lVar, lVarLength);
+        pushToNameTable (be, lVar, lVarLength);
 
         container = findNameTableContainer(be, lVar, lVarLength);        
     }
@@ -553,13 +551,11 @@ ErrorCode assembleVariable (Backend* be, Node* node)
     AssertSoft(be->nameTables,          NULL_PTR);
     AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
 
-    NameTable*          curNameTable = &be->nameTables[be->level];
-
     NameTableContainer* container    = findNameTableContainer(be, node->data.name, node->length);
 
     if (! container)
     {
-        pushToNameTable(be, curNameTable, node->data.name, node->length);
+        pushToNameTable(be, node->data.name, node->length);
     }
     else
     {
@@ -607,7 +603,7 @@ ErrorCode pushFunctionArgumentsToNameTable (Backend* be, Node* node)
         WRITE_ASM ("\tpop [rax + %llu] ; %.*s\n", be->nameTables[be->level].size, varNode->length, varNode->data.name);
         WRITE_ASM ("\n");
 
-        pushToNameTable(be, &be->nameTables[be->level], varNode->data.name, varNode->length);
+        pushToNameTable(be, varNode->data.name, varNode->length);
     }
 
     if (node->right)
@@ -668,20 +664,21 @@ ErrorCode assembleIf (Backend* be, Node* node)
     return OK;
 }
 
-ErrorCode pushToNameTable (Backend* be, NameTable* nameTable, char* name, size_t nameLength)
+ErrorCode pushToNameTable (Backend* be, char* name, size_t nameLength)
 {
-    AssertSoft(nameTable,                             NULL_PTR);
-    AssertSoft(nameTable->size < nameTable->capacity, INDEX_OUT_OF_RANGE);
-    AssertSoft(name,                                  NULL_PTR);
+    AssertSoft(be->nameTables[be->level].size < be->nameTables[be->level].capacity, INDEX_OUT_OF_RANGE);
+    AssertSoft(name,                                                                NULL_PTR);
 
-    NameTableContainer* container = &nameTable->container[nameTable->size]; 
+    NameTable* curNameTable       = &be->nameTables[be->level];
+
+    NameTableContainer* container = &curNameTable->container[curNameTable->size];  
 
     container->name            = name;
     container->nameLength      = nameLength;
     container->addr.ramAddress = sumNameTableSizes (be);
     container->type            = RAM; 
 
-    nameTable->size++;
+    curNameTable->size++;
 
     return OK;
 }
