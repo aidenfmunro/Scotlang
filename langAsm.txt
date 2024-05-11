@@ -1,3 +1,8 @@
+push 1000
+pop rax
+
+jmp main
+
 main:
 	push 0
 	pop [rax + 0] ; y assign

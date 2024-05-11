@@ -404,42 +404,42 @@ ErrorCode assembleLogicalOperation (Backend* be, Node* node)
         case NEQ:
         {
 
-            WRITE_ASM ("\tjne L%llu\n", LABEL_NUM);
+            WRITE_ASM ("\tje L%llu\n", LABEL_NUM);
 
             return OK;
         }
 
         case EQ:
         {
-            WRITE_ASM ("\tje L%llu\n",  LABEL_NUM);
+            WRITE_ASM ("\tjne L%llu\n",  LABEL_NUM);
 
             return OK;
         }
 
         case MORE:
         {
-            WRITE_ASM ("\tja L%llu\n",  LABEL_NUM);
+            WRITE_ASM ("\tjbe L%llu\n",  LABEL_NUM);
 
             return OK;
         }
 
         case LESS:
         {
-            WRITE_ASM ("\tjb L%llu\n",  LABEL_NUM);
+            WRITE_ASM ("\tjae L%llu\n",  LABEL_NUM);
 
             return OK;
         }
 
         case MORE_OR_EQUAL:
         {
-            WRITE_ASM ("\tjae L%llu\n", LABEL_NUM);
+            WRITE_ASM ("\tjb L%llu\n", LABEL_NUM);
 
             return OK;
         }
 
         case LESS_OR_EQUAL:
         {
-            WRITE_ASM ("\tjbe L%llu\n", LABEL_NUM);
+            WRITE_ASM ("\tja L%llu\n", LABEL_NUM);
 
             return OK;
         }
