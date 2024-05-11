@@ -121,6 +121,7 @@ ErrorCode downgradeNameTable               (Backend* be);
 ErrorCode upgradeNameTable                 (Backend* be);
 
 NameTableContainer* findNameTableContainer (Backend* be, char* name, size_t nameLength);
+size_t              sumNameTableSizes      (Backend* be);
 
 //
 

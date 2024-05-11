@@ -33,16 +33,16 @@ main:
 
 
 	push rax ; stack frame prologue
-	push 0
+	push 4
 	add
 	pop rax
 
 
-	call solveLinearEquation
+	call lineareq
 
 
 	push rax ; stack frame epilogue
-	push 0
+	push 4
 	sub
 	pop rax
 
@@ -60,16 +60,16 @@ L0:   ; end if
 
 
 	push rax ; stack frame prologue
-	push 0
+	push 4
 	add
 	pop rax
 
 
-	call solveQuadraticEquation
+	call quadreq
 
 
 	push rax ; stack frame epilogue
-	push 0
+	push 4
 	sub
 	pop rax
 
@@ -78,25 +78,23 @@ L1:   ; end if
 
 	hlt
 
-solveLinearEquation:
-	pop [rax + 0] ; a
+lineareq:
+	pop [rax + 0] ; b
 
-	pop [rax + 1] ; b
+	pop [rax + 1] ; c
 
-	pop [rax + 2] ; c
-
-	push [rax + 1] ; b
+	push [rax + 0] ; b
 
 	push 0
 	jne L2
-	push [rax + 2] ; c
+	push [rax + 1] ; c
 
 	push 0
 	je L2
 	push 1
 	out
 L2:   ; end if
-	push [rax + 2] ; c
+	push [rax + 1] ; c
 
 	push 0
 	jne L3
@@ -106,13 +104,13 @@ L2:   ; end if
 	out
 L3:   ; end if
 L4:   ; end if
-	push [rax + 1] ; b
+	push [rax + 0] ; b
 
 	push 0
 	je L5
-	push [rax + 2] ; c
+	push [rax + 1] ; c
 
-	push [rax + 1] ; b
+	push [rax + 0] ; b
 
 	DIV
 	SUB
@@ -125,7 +123,7 @@ L5:   ; end if
 	ret
 
 
-solveQuadraticEquation:
+quadreq:
 	pop [rax + 0] ; a
 
 	pop [rax + 1] ; b
@@ -134,8 +132,9 @@ solveQuadraticEquation:
 
 	push [rax + 1] ; b
 
-	push 2
-	POW
+	push [rax + 1] ; b
+
+	MUL
 	push 4
 	push [rax + 0] ; a
 
@@ -145,6 +144,9 @@ solveQuadraticEquation:
 	MUL
 	SUB
 	pop [rax + 3] ; d assign
+	push [rax + 3] ; d
+
+	out
 	push [rax + 3] ; d
 
 	push 0
@@ -158,12 +160,17 @@ L6:   ; end if
 	jne L7
 	push [rax + 1] ; b
 
+	push [rax + 1] ; b
+
+	SUB
+	push [rax + 1] ; b
+
+	SUB
 	push 2
 	push [rax + 0] ; a
 
 	MUL
 	DIV
-	SUB
 	pop [rax + 0] ; x assign
 	push [rax + 0] ; x
 
@@ -175,36 +182,43 @@ L7:   ; end if
 	jbe L8
 	push [rax + 1] ; b
 
+	push [rax + 1] ; b
+
 	SUB
+	push [rax + 1] ; b
+
+	SUB
+	pop [rax + 0] ; bm assign
 	push [rax + 3] ; d
 
 	SQRT
+	pop [rax + 1] ; ds assign
+	push [rax + 0] ; bm
+
+	push [rax + 1] ; ds
+
 	ADD
 	push 2
 	push [rax + 0] ; a
 
 	MUL
 	DIV
-	pop [rax + 0] ; x assign
-	push [rax + 1] ; b
+	pop [rax + 2] ; x assign
+	push [rax + 0] ; bm
 
-	SUB
-	push [rax + 3] ; d
+	push [rax + 1] ; ds
 
-	SQRT
 	SUB
 	push 2
 	push [rax + 0] ; a
 
 	MUL
 	DIV
-	pop [rax + 1] ; y assign
-	push 2
-	out
-	push [rax + 0] ; x
+	pop [rax + 3] ; y assign
+	push [rax + 2] ; x
 
 	out
-	push [rax + 1] ; y
+	push [rax + 3] ; y
 
 	out
 L8:   ; end if

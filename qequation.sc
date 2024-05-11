@@ -16,18 +16,18 @@ fn main ()
 
     if (a == 0)
     {
-        x = solveLinearEquation (b, c);
+        x = lineareq (b, c);
     }
     
     if (a != 0)
     {
-        x = solveQuadraticEquation (a, b, c);
+        x = quadreq (a, b, c);
     }
 
     ret;
 }
 
-fn solveLinearEquation (a, b, c)
+fn lineareq (b, c)
 {
     if (b == 0)
     {
@@ -54,9 +54,11 @@ fn solveLinearEquation (a, b, c)
     ret 1;
 }
 
-fn solveQuadraticEquation (a, b, c)
+fn quadreq (a, b, c)
 {
-    d = b ^ 2 - 4 * a * c;
+    d = b * b - 4 * a * c;
+
+    print(d);
 
     if (d < 0)
     {
@@ -64,17 +66,18 @@ fn solveQuadraticEquation (a, b, c)
     }
     if (d == 0)
     {
-        x = - b / (2 * a);
+        x = (b - b - b) / (2 * a);
 
         print(x);
     }  
     if (d > 0)
     {
-        x = (- b + sqrt(d)) / (2 * a);
+        bm = b - b - b;
+        ds = sqrt(d);
 
-        y = (- b - sqrt(d)) / (2 * a);
+        x = (bm + ds) / (2 * a);
 
-        print (2);
+        y = (bm - ds) / (2 * a);
 
         print (x);
 

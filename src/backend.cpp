@@ -375,11 +375,15 @@ ErrorCode assembleFunctionCall (Backend* be, Node* node)
 
 ErrorCode stackFramePrologue (Backend* be, NameTable* nameTable)
 {
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
     AssertSoft (nameTable, NULL_PTR);
 
     WRITE_ASM ("\n");
     WRITE_ASM ("\tpush rax ; stack frame prologue\n");
-    WRITE_ASM ("\tpush %llu\n", nameTable->size);
+    WRITE_ASM ("\tpush %llu\n", sumNameTableSizes (be));
     WRITE_ASM ("\tadd\n");
     WRITE_ASM ("\tpop rax\n");
     WRITE_ASM ("\n");
@@ -387,13 +391,36 @@ ErrorCode stackFramePrologue (Backend* be, NameTable* nameTable)
     return OK;
 }
 
+size_t sumNameTableSizes (Backend* be)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    size_t sumSize = 0;
+
+    for (size_t lvlDepth = 0; lvlDepth <= be->level; lvlDepth++)
+    {
+        sumSize += be->nameTables[lvlDepth].size;
+    }
+
+    printf ("size: %llu\n", sumSize);
+
+    return sumSize;
+}
+
 ErrorCode stackFrameEpilogue (Backend* be, NameTable* nameTable)
 {
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
     AssertSoft (nameTable, NULL_PTR);
 
     WRITE_ASM ("\n");
     WRITE_ASM ("\tpush rax ; stack frame epilogue\n");
-    WRITE_ASM ("\tpush %llu\n", nameTable->size);
+    WRITE_ASM ("\tpush %llu\n", sumNameTableSizes (be));
     WRITE_ASM ("\tsub\n");
     WRITE_ASM ("\tpop rax\n");
     WRITE_ASM ("\n");
