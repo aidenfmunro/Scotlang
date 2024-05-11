@@ -1,32 +1,33 @@
-#include <stdio.h>
-#include "tokenizer.h"
-#include "parser.h"
+#include "frontend.h"
 #include "backend.h"
 
 int main (int argc, char* argv[])
 {
-    Text src = {};
+    Frontend fe = {};
 
-    CreateText(&src, "factorial.sc");
+    if (argv[1])
+    {
+        CreateFrontend (&fe, argv[1]);
+    }
+    else
+    {
+        printf ("You might of forgot to type the Scotlang filename... \n");
 
-    Tokens tkns = getTokens(&src);
+        return NONE_EXIST;
+    }
 
-    PrintTokens(&tkns);
+    if (argv[2])
+    {
+        RunBackend (fe.astNode, argv[2]);
+    }
+    else
+    {
+        printf ("You might of forgot to type the asm output filename...\n");
+        
+        return NONE_EXIST;
+    }
 
-    Tree tree = {};
+    DestroyFrontend (&fe);
 
-    tree.root  = GetGrammar (&tkns);
-
-    DumpTreeGraph(tree.root);
-
-
-    RunBackend (tree.root, "asmOut.txt");
-
-    free(tkns.token);
-
-    deleteNode(tree.root);
-
-    DestroyText(&src);
-
-    return 0;
+    return OK;
 }

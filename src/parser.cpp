@@ -3,8 +3,7 @@
 Node* GetGrammar (Tokens* tkns)
 {
     AssertSoft(curPos < tkns->tokenCount, NULL)
-    AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
-
+    AssertSoft(curNode,                   NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
 
     Node* root = GetAll (tkns); 
     
@@ -14,7 +13,7 @@ Node* GetGrammar (Tokens* tkns)
 Node* GetAll (Tokens* tkns)
 {
     AssertSoft(curPos < tkns->tokenCount, NULL)
-    AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
+    AssertSoft(curNode,                   NULL); 
     
     Node* decNode = createKeywordNode(FUNCDEC);
 
@@ -47,8 +46,7 @@ Node* GetAll (Tokens* tkns)
 Node* GetFunc (Tokens* tkns)
 {
     AssertSoft(curPos < tkns->tokenCount, NULL)
-
-    AssertSoft(curNode, NULL); // TODO: как сделать так, чтобы не выходило за рамки токены?
+    AssertSoft(curNode,                   NULL);
 
     PrintCurrentParserState();
 
@@ -161,9 +159,6 @@ Node* GetFuncArguments (Tokens* tkns)
 
             if (commaNode->data.id == CLOSE_RB)
             {
-
-
-
                 connectNode(curArgNode, argNode, NULL);
 
                 break;

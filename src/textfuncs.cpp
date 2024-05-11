@@ -25,16 +25,22 @@ ErrorCode DestroyText (Text* text)
 {
     AssertSoft(text->buffer, NULL_PTR);
 
-    free((void*)text->buffer);
+    free(text->buffer);
 
     return OK;
 }
 
 char* parseBuf (Text* text, const char* filename)
 {   
-    AssertSoft(text, NULL);
+    AssertSoft(text,     NULL);
+    AssertSoft(filename, NULL);
 
     FILE* fp = fopen(filename, "rb");
+
+    if (! fp)
+    {
+        printf("Can't open file <%s>!\n", filename);
+    }
 
     char* buffer = (char*)calloc(text->size + 1, sizeof(char));
 

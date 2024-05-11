@@ -16,6 +16,8 @@ size_t LABEL_NUM = 0;
 
 #define ASSEMBLE(node) Assemble (be, node)
 
+//
+
 ErrorCode RunBackend (Node* astRoot, const char* outFileName)
 {
     AssertSoft(astRoot,     NULL_PTR);
