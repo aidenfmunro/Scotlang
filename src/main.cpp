@@ -20,20 +20,7 @@ int main (int argc, char* argv[])
     DumpTreeGraph(tree.root);
 
 
-        FILE * fileOut = fopen("langAsm.txt", "w");
-
-    Backend be = {};
-
-    be.outFile = fileOut;
-
-    BackendCreate (&be);
-
-    Assemble (&be, tree.root);
-
-        fclose (fileOut);
-
-    BackendDestroy (&be);
-
+    RunBackend (tree.root, "asmOut.txt");
 
     free(tkns.token);
 

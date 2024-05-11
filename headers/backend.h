@@ -8,11 +8,12 @@
 #include "tree.h"
 #include "utils.h"
 
+//
 
 enum MemoryType
 {
     REG = 0,
-    RAM = 1
+    RAM = 1,
 };
 
 //
@@ -67,10 +68,14 @@ struct Backend
 
 //
 
+ErrorCode RunBackend                       (Node* astRoot, const char* outFileName);
+
 ErrorCode BackendCreate                    (Backend* be);
                
 ErrorCode BackendDestroy                   (Backend* be);
                
+ErrorCode assemblePreamble                 (Backend* be);
+
 ErrorCode Assemble                         (Backend* be, Node* node);
 
 ErrorCode assembleConst                    (Backend* be, Node* node);
@@ -117,10 +122,6 @@ ErrorCode upgradeNameTable                 (Backend* be);
 
 NameTableContainer* findNameTableContainer (Backend* be, char* name, size_t nameLength);
 
-
-
-
-
-
+//
 
 #endif

@@ -1,3 +1,10 @@
+; preamble
+
+push 1000 ; RAM starting point
+pop rax   ; set RAM counter
+
+jmp main  ; program start
+
 main:
 	push 0
 	pop [rax + 0] ; y assign

@@ -16,8 +16,26 @@ size_t LABEL_NUM = 0;
 
 #define ASSEMBLE(node) Assemble (be, node)
 
-ErrorCode RunBackend ()
+ErrorCode RunBackend (Node* astRoot, const char* outFileName)
 {
+    AssertSoft(astRoot,     NULL_PTR);
+    AssertSoft(outFileName, NULL_PTR);
+
+    myOpen (outFileName, "w", outFile);
+
+    Backend be = {.outFile = outFile};
+
+    BackendCreate (&be);
+
+    assemblePreamble (&be);
+
+    Assemble (&be, astRoot);
+
+    BackendDestroy (&be);
+
+    myClose (outFile);
+
+    return OK;
 }
 
 ErrorCode BackendCreate (Backend* be)
@@ -195,6 +213,21 @@ ErrorCode Assemble (Backend* be, Node* node)
         }
     }   
 
+    return OK;
+}
+
+ErrorCode assemblePreamble (Backend* be)
+{
+    AssertSoft(be,                      NULL_PTR);
+    AssertSoft(be->outFile,             NULL_PTR);
+    AssertSoft(be->nameTables,          NULL_PTR);
+    AssertSoft(be->size < be->capacity, INDEX_OUT_OF_RANGE);
+
+    WRITE_ASM ("; preamble\n\n");
+    WRITE_ASM ("push 1000 ; RAM starting point\n");
+    WRITE_ASM ("pop rax   ; set RAM counter\n\n");
+    WRITE_ASM ("jmp main  ; program start\n\n");
+    
     return OK;
 }
 
