@@ -38,6 +38,8 @@ Tokens getTokens (Text* src)
 
     tkns.curTokenNum = 0;
 
+    PrintTokens (&tkns);
+
     return tkns; 
 }
 
@@ -108,12 +110,15 @@ bool getKeywordToken (Tokens* tkns, char* buffer)
                                                                     \
     if (strncmp (keyword, curPtr, sizeof(keyword) - 1) == 0)        \
     {                                                               \
+        if (*(curPtr + sizeof(keyword) - 1) && !isalpha(*(curPtr + sizeof(keyword) - 1))) \
+        {                                                           \
         tkns->curSymPos  += sizeof(keyword) - 1;                    \
         tkns->curLinePos += sizeof(keyword) - 1;                    \
                                                                     \
         createKeywordToken (tkns, name);                            \
                                                                     \
         return true;                                                \
+        }                                                           \
     }
 
     #include "keywords.def"

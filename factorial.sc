@@ -1,22 +1,22 @@
-fn main ()
-{
-    y = 0;
+dae main fit like?
+ya
+    y gie 0 !
 
-    input (y);
+    speir fit y like? !
 
-    x = factorial(y);
+    x gie factorial fit y like? !
 
-    print(x);
+    spikin fit x like? !
 
-    ret;
-}
+    wheesht !
+gan?
 
-fn factorial (a)
-{
-    if (a == 0)
-    {
-        ret 1; 
-    }
+dae factorial fit a like?
+ya
+    fa fit a div 0 like?
+    ya
+        wheesht 1 ! 
+    gan?
 
-    ret a * factorial(a - 1);
-}
+    wheesht a * factorial fit a - 1 like? !
+gan?

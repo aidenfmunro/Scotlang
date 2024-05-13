@@ -1,88 +1,88 @@
-fn main ()
-{
-    a = 0;
+dae main fit like?
+ya
+    a gie 0 !
 
-    b = 0;
+    b gie 0 !
 
-    c = 0;
+    c gie 0 !
 
-    input(a);
+    speir fit a like? !
 
-    input(b);
+    speir fit b like? !
 
-    input(c);
+    speir fit c like? !
 
-    x = 0;
+    x gie 0 !
 
-    if (a == 0)
-    {
-        x = lineareq (b, c);
-    }
+    fa fit a div 0 like?
+    ya
+        x gie lineareq fit b, c like? !
+    gan?
     
-    if (a != 0)
-    {
-        x = quadreq (a, b, c);
-    }
+    fa fit a wisnae 0 like?
+    ya
+        x gie quadreq fit a, b, c like? !
+    gan?
 
-    ret;
-}
+    wheesht !
+gan?
 
-fn lineareq (b, c)
-{
-    if (b == 0)
-    {
-        if (c != 0)
-        {
-            print (1);
-        }
+dae lineareq fit b, c like?
+ya
+    fa fit b div 0 like?
+    ya
+        fa fit c wisnae 0 like?
+        ya
+            spikin fit 1 like? !
+        gan?
 
-        if (c == 0)
-        {
-            print (1);
+        fa fit c div 0 like?
+        ya
+            spikin fit 1 like? !
 
-            print (0);
-        }
-    }
+            spikin fit 0 like? !
+        gan?
+    gan?
 
-    if (b != 0)
-    {
-        x = (c - c - c) / b;
+    fa fit b wisnae 0 like?
+    ya
+        x gie fit c - c - c like? / b !
 
-        print(x);
-    }
+        spikin fit x like? !
+    gan?
 
-    ret 1;
-}
+    wheesht 1 !
+gan?
 
-fn quadreq (a, b, c)
-{
-    d = b * b - 4 * a * c;
+dae quadreq fit a, b, c like?
+ya
+    d gie b * b - 4 * a * c !
 
-    print(d);
+    spikin fit d like? !
 
-    if (d < 0)
-    {
-        print (0);
-    }
-    if (d == 0)
-    {
-        x = (b - b - b) / (2 * a);
+    fa fit d sma 0 like?
+    ya
+        spikin fit 0 like? !
+    gan?
+    fa fit d div 0 like?
+    ya
+        x gie fit b - b - b like? / fit 2 * a like? !
 
-        print(x);
-    }  
-    if (d > 0)
-    {
-        bm = b - b - b;
-        ds = sqrt(d);
+        spikin fit x like? !
+    gan?  
+    fa fit d mair 0 like?
+    ya
+        bm gie b - b - b !
+        ds gie sqrt fit d like? !
 
-        x = (bm + ds) / (2 * a);
+        x gie fit bm + ds like? / fit 2 * a like? !
 
-        y = (bm - ds) / (2 * a);
+        y gie fit bm - ds like? / fit 2 * a like? !
 
-        print (x);
+        spikin fit x like? !
 
-        print (y);
-    }
+        spikin fit y like? !
+    gan?
 
-    ret 1;
-}
+    wheesht 1 !
+gan?
