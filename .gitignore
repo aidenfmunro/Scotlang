@@ -1,5 +1,6 @@
 /.vscode
 /*.o
+/obj
 /main
 /*.dot
 /temp.txt
